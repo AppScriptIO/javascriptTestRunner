@@ -1,27 +1,16 @@
 /**
  * Programmatic rest runner https://github.com/mochajs/mocha/wiki/Using-mocha-programmatically
+ * //TODO: Work with JSDom module for frontend testing using nodejs.
  */ 
-const Mocha = require('mocha'),
-    filesystem = require('fs'),
-    path = require('path')
+import path from 'path'
+import Mocha from 'mocha'
 const mocha = new Mocha(); // Instantiate a Mocha instance.
+import { listFileRecursively } from './utility/listFileRecursively.js'
+const extensionName = '.test.js'
 let testPath = process.argv.slice(2)[0] // get first argument variable (either file path or directory path) 
-const extensionName = '.test.js'    
-
 
 /* List all files in a directory recursively */
-console.log(`• Searching for ${extensionName} extension files.`)
-let listFileRecursively = ({directory}) => {
-    let results = []
-    let list = filesystem.readdirSync(directory)
-    list.forEach(filename => {
-        let filepath = path.join(directory, filename)
-        let stat = filesystem.statSync(filepath)
-        if (stat && stat.isDirectory()) results = results.concat(listFileRecursively({directory: filepath}))
-        else results.push({ name: filename, path: filepath })
-    })
-    return results
-}
+console.log(`• Searching for ${extensionName} extension files, in path ${testPath}.`)
 
 // Add each .js file to the mocha instance
 if(testPath.endsWith(extensionName)) { // single test file path

@@ -1,8 +1,8 @@
 {
-  "name": "testrunner",
+  "name": "@dependency/javascriptTestRunner",
   "version": "1.0.0",
   "description": "Mocha test runner for unit tests and integration tests.",
-  "main": "entrypoint.js",
+  "main": "./source/entrypoint.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -12,6 +12,8 @@
     "mocha": "*",
     "moment": "*",
     "sinon": "*",
-    "should": "*"
+    "should": "*",
+    "@dependency/javascriptTranspilation": "https://github.com/AppScriptIO/javascriptTranspilation"
+
   }
 }

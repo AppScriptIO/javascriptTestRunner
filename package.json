@@ -9,11 +9,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@dependency/javascriptTranspilation": "https://github.com/AppScriptIO/javascriptTranspilation",
+    "chai": "^4.1.2",
     "mocha": "*",
     "moment": "*",
-    "sinon": "*",
     "should": "*",
-    "@dependency/javascriptTranspilation": "https://github.com/AppScriptIO/javascriptTranspilation"
-
+    "sinon": "*"
   }
 }

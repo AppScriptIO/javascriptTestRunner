@@ -68,17 +68,18 @@ function runMocha({
         mocha.run(error => {
                 // exit with non-zero status if there were failures
                 if(error) { 
-                    throw error
+                    console.log('⚠ Error - failing test.\n')
+                    // throw error
                 }
                 // process.exit()
             })
-            // .on('test', function(test) {
+            // .on('test', function(test) { 
             //     console.log('Test started: '+test.title);
             // })
             // .on('test end', function(test) {
             //     console.log('Test done: '+test.title);
             // })
-            // .on('pass', function(test) {
+            // .on('pass', function(test) { 
             //     console.log('Test passed');
             //     console.log(test);
             // })
@@ -92,8 +93,12 @@ function runMocha({
             // })
 
         
-    } catch (error) {    
-        throw error
+    } catch (error) {   
+        console.group(`⚠ Error while running Mocha test:`) 
+        console.log(error)
+        console.groupEnd()
+        console.log('\n')
+        // throw error
     }    
 }
 

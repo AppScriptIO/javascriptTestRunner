@@ -103,6 +103,11 @@ function runMocha({
 }
 
 function cliInterface() {
+    process.on('SIGINT', () => { 
+        console.log("Caught interrupt signal - test container level")
+        process.exit(0)
+    })
+    
     // console.log(process.argv)
     let testPath = process.argv.slice(2)[0] // get first argument variable (either file path or directory path) 
     invoke({ testPath })

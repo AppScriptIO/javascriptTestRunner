@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@dependency/parseKeyValuePairSeparatedBySymbol": "https://github.com/AppScriptIO/parseKeyValuePairSeparatedBySymbol",
     "@dependency/javascriptTranspilation": "https://github.com/AppScriptIO/javascriptTranspilation",
     "chai": "^4.1.2",
     "chokidar": "^2.0.4",

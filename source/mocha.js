@@ -1,6 +1,5 @@
 /**
  * Programmatic rest runner https://github.com/mochajs/mocha/wiki/Using-mocha-programmatically
- * //TODO: Work with JSDom module for frontend testing using nodejs.
  */ 
 import path from 'path'
 import chokidar from 'chokidar'

@@ -33,7 +33,7 @@ function unitTest(input
             break: nodeFlag.break = process.argv.includes('break')
         },
         testRunnerModulePath = javascriptTestRunnerPath, // path of the module that includes the test framework.
-        testPath = namedArgs['path'] || '/project/application/source', // path to test directory.
+        testPath = namedArgs['path'] || configuration.directory.testPath, // path to test directory.
         applicationPathOnHostMachine = process.env.applicationPathOnHostMachine || path.join(configuration.directory.projectPath, 'application') // this path should be already resolved to Unix path from Windows path including the drive letter, which will be used in MobyLinuxVM.
     } = input) // destructure nested objects to the object properties themselves.
     
@@ -85,8 +85,6 @@ function unitTest(input
 
 }
 
-
-// TODO: pass CLI arguments & environment variables using the 'cliAdapter' function rather than default destructioring parameters above.
 /**
  * USAGE:
  * ./setup/entrypoint.js containerManager entrypointConfigurationKey=test testType=unitTest
@@ -95,9 +93,11 @@ function cliAdapter({
     testType = namedArgs['testType'] || null,
     configurationPath 
 } = {}) {
-    if(!configurationPath) configurationPath =  (namedArgs.configuration) ? 
-        path.join(process.env.PWD, namedArgs.configuration) : 
-        path.join(process.env.PWD, 'configuration');
+    // use own script algorithm for finding configuration file, rather than using containerManager's passed configurationPath.
+    if(!configurationPath) 
+        configurationPath = (namedArgs.configuration) ? 
+            path.join(process.cwd(), namedArgs.configuration) : 
+            path.join(process.cwd(), 'configuration'); // For this to work - configuration arg must be kept after usage by containerManager.
     const configuration = require(configurationPath)
 
     switch (testType) {
@@ -111,7 +111,14 @@ function cliAdapter({
             })
         } break;
     }
-
 }
 
-cliAdapter()
+// check if executed directly from cli or should be invoked as module.
+if (require.main === module) { 
+    console.log('• Executed directly.')
+    cliAdapter()
+} 
+
+export {
+    cliAdapter 
+}

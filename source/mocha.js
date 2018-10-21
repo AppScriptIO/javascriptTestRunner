@@ -1,65 +1,23 @@
 /**
- * Programmatic rest runner https://github.com/mochajs/mocha/wiki/Using-mocha-programmatically
+ * Mocha -Programmatic rest runner https://github.com/mochajs/mocha/wiki/Using-mocha-programmatically
  */ 
-import path from 'path'
-import chokidar from 'chokidar'
 import Mocha from 'mocha'
-import { listFileRecursively } from './utility/listFileRecursively.js'
 
-function invoke({ 
-    testPath, 
-    extensionName = '.test.js',
-}) {
-    /* List all files in a directory recursively */
-    console.log(`• Searching for ${extensionName} extension files, in path ${testPath}.`)
-    let fileArray = listFileRecursively({directory: testPath})
-        .filter(file => {
-            // Only keep the .test.js files
-            return file.name.substr(-extensionName.length) === extensionName;
-        })
-        .reduce((accumulator, currentValue) => {
-            accumulator.push(currentValue.path)
-            return accumulator
-        }, [])
-
-    runMocha({ testPath, extensionName, fileArray }) // initial run
-
-    let watcher = chokidar.watch(fileArray, {
-        ignored: new RegExp(/node_modules/),
-        usePolling: false
-    })
-    watcher
-        .on('ready', path => {
-            console.group('List of paths:')
-            console.log(watcher.getWatched())
-            console.log('\n\n')
-            console.groupEnd()
-        })
-        .on('add', path => {
-            console.log(`File ${path} has been added`)
-        })
-        .on('change', path => {
-            console.log(`File ${path} has been changed`)
-            runMocha({ testPath, extensionName, fileArray })
-        })
-        .on('unlink', path => console.log(`File ${path} has been removed`))
-}
-
-function runMocha({ 
+export function runMocha({ 
     mocha = new Mocha(), // Instantiate a Mocha instance.
-    testPath,
-    extensionName,
-    fileArray
-}) {
-    mocha.suite.on('require', function (global, file) { delete require.cache[file] }) // Fixes issue ❗ - Allow running multiple instances of `mocha` by reseting require.cache https://github.com/mochajs/mocha/issues/995
+    testTarget,
+    jsFileArray
+} = {}) {
+
+    invalidateRequiredModule({ mochaInstance: mocha, fileArray: jsFileArray })
 
     // Add each .test.js file to the mocha instance
-    if(testPath.endsWith(extensionName)) { // single test file path
+    if(Array.isArray(testTarget)) { // treat test target as array of files.
+        testTarget.forEach((file) => {
+            mocha.addFile(file)
+        })
+    } else { // single test file path
         mocha.addFile(testPath)
-    } else { // treat path as directory
-        fileArray.forEach((file) => {
-                mocha.addFile(file)
-            })
     }
     
     // Run tests.
@@ -101,15 +59,21 @@ function runMocha({
     }    
 }
 
-function cliInterface() {
-    process.on('SIGINT', () => { 
-        console.log("Caught interrupt signal - test container level")
-        process.exit(0)
-    })
-    
-    // console.log(process.argv)
-    let testPath = process.argv.slice(2)[0] // get first argument variable (either file path or directory path) 
-    invoke({ testPath })
-}
 
-cliInterface()
+/**
+ * hakish way to invalidate all required modules caches in the Node process, which will allow for changes in .test.js or .js files to propagate in the re-started mocha tests.  
+ * Where test files are invalidated by mocha's 'require' hook and other files (.js) are invalidated with 'beforeAll' hook. (Could use only 'beforeAll' but this is not a straight forward method anyway.)
+ **/ 
+function invalidateRequiredModule({ mochaInstance, fileArray }) {
+    mochaInstance.suite.on('require', function (global, file) { // invalidate only test files, not the child files required in test files. i.e. ISSUE: any file required inside test files won't be discarded and reloaded.
+        delete require.cache[file]
+    }) // Fixes issue ❗ - Allow running multiple instances of `mocha` by reseting require.cache https://github.com/mochajs/mocha/issues/995
+    // invalidate js files as well.
+    mochaInstance.suite.beforeAll(function (done) { // https://mochajs.org/api/mocha.suite#beforeAll
+        console.log(`• Invalidating require cache of ${fileArray.length} file + test files.\n`)
+        fileArray.forEach((file) => {
+            delete require.cache[file]
+        })
+        done()
+    }) 
+}

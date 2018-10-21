@@ -12,7 +12,7 @@ async function run() {
     // Setup environment 
     await require('@dependency/addModuleResolutionPath').addModuleResolutionPath({ pathArray: [ path.dirname(require.main.filename) ] })
     // Run
-    require('./mocha.js')
+    require('./script.js')
 }
 
 run().catch(error => {

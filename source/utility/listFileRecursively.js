@@ -2,7 +2,7 @@ import filesystem from 'fs'
 import path from 'path'
 
 // returns all files in nested directory.
-let listFileRecursively = ({directory}) => {
+function listFileRecursively({directory}) {
     let results = []
     let list = filesystem.readdirSync(directory)
     list.forEach(filename => {
@@ -15,4 +15,17 @@ let listFileRecursively = ({directory}) => {
     return results
 }
 
-export { listFileRecursively }
+// interface for listFieRecusively function that returns an array of file paths, and filters files with the specified extension.
+function listFileWithExtension({ directory, extension }) {
+    return listFileRecursively({directory})
+        .filter(file => {
+            // Only keep the .test.js files
+            return file.name.substr(-extension.length) === extension;
+        })
+        .reduce((accumulator, currentValue) => {
+            accumulator.push(currentValue.path)
+            return accumulator
+        }, [])
+}
+
+export { listFileRecursively, listFileWithExtension }

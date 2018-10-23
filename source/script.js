@@ -12,11 +12,14 @@ function cliInterface() {
     })
     
     let testPath = process.argv.slice(2)[0] // get first argument variable (either file path or directory path) 
-    invoke({ testPath, sourcePath: testPath })
+    invoke({ 
+        testPath, 
+        jsPathArray: [testPath, path.dirname(testPath)] // js files in source path & in node_modules path which is in the root path.
+    })
 }
 
 async function invoke({
-    sourcePath,
+    jsPathArray,
     jsFileExtension = '.js',
     testPath, 
     testFileExtension = '.test.js',
@@ -30,10 +33,14 @@ async function invoke({
         testFileArray = listFileWithExtension({ directory: testPath, extension: testFileExtension })
     }
 
-    let jsFileArray = listFileWithExtension({ directory: sourcePath, extension: jsFileExtension })
+    let jsFileArrayOfArray = jsPathArray.map(jsPath => {
+        return listFileWithExtension({ directory: jsPath, extension: jsFileExtension })
+    })
+    // add node_modules js files
+    let jsFileArray = Array.prototype.concat.apply([], jsFileArrayOfArray)
     
     let triggerCallback = () => { runMocha({ testTarget: testFileArray, jsFileArray }) } // to be run after file notification
-    await watchFile({ triggerCallback, fileArray: Array.prototype.concat.apply([], [ jsFileArray, testFileArray ]) })
+    await watchFile({ triggerCallback, fileArray: Array.prototype.concat.apply([], [ jsFileArray, testFileArray ]), ignoreNodeModules: true })
     triggerCallback() // initial trigger action, to run test immediately
 }
 

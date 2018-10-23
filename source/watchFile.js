@@ -6,10 +6,11 @@ export async function watchFile({
     triggerCallback, 
     // Following delay solves the issue of closley received notifications, preventing duplicate actions for the same related notifications (e.g. docker-windows-volume-watcher mistakengly triggers duplicate notifications for each chagne).
     notificationTriggerDelay = 100, // 100 ms between accepting notifications and triggering action. This prevents duplicate executions fron wrong immediate duplicate notification fo the container.
-    notificationTrigger = true // on / off switch for taking action after a notification received
+    notificationTrigger = true, // on / off switch for taking action after a notification received
+    ignoreNodeModules = true
 }) {
     let watcher = chokidar.watch(fileArray, {
-        ignored: new RegExp(/node_modules/),
+        ignored: (ignoreNodeModules) ? new RegExp(/node_modules/) : false,
         usePolling: false
     })
     

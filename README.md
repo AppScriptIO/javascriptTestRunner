@@ -1,1 +1,1 @@
-javascriptTestRunner
+./documentation/information.md

@@ -11,6 +11,11 @@ async function invoke({
     testFileExtension = '.test.js',
 }) {
 
+    console.log(`\x1b[33m\x1b[1m\x1b[7m\x1b[36m%s\x1b[0m \x1b[2m\x1b[3m%s\x1b[0m`, `Container:`, `NodeJS App`)
+
+    // Setup environment 
+    await require('@dependency/addModuleResolutionPath').addModuleResolutionPath({ pathArray: [ path.dirname(require.main.filename) ] })
+
     process.on('SIGINT', () => { 
         console.log("Caught interrupt signal - test container level")
         process.exit(0)

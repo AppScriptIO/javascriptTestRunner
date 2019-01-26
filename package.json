@@ -2,12 +2,13 @@
   "name": "@dependency/javascriptTestRunner",
   "version": "1.0.0",
   "description": "Mocha test runner for unit tests and integration tests.",
-  "main": "./source/entrypoint.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "main": "./source/entrypoint/module",
+  "bin": {
+    "testRunnerModule": "./source/entrypoint/module",
+    "testRunnerCLI": "./source/entrypoint/cli"
   },
-  "author": "",
-  "license": "ISC",
+  "scripts": {
+  },
   "dependencies": {
     "@dependency/parseKeyValuePairSeparatedBySymbol": "https://github.com/AppScriptIO/parseKeyValuePairSeparatedBySymbol",
     "@dependency/javascriptTranspilation": "https://github.com/AppScriptIO/javascriptTranspilation",

@@ -3,27 +3,21 @@ import { listFileRecursively, listFileWithExtension } from './utility/listFileRe
 import { runMocha } from './mocha.js'
 import { watchFile } from './watchFile.js'
 
-cliInterface()
+invoke()
 
-function cliInterface() {
+async function invoke({
+    testPath = process.argv.slice(2)[0], // get first argument variable (either file path or directory path) 
+    jsFileExtension = '.js',
+    testFileExtension = '.test.js',
+}) {
+
     process.on('SIGINT', () => { 
         console.log("Caught interrupt signal - test container level")
         process.exit(0)
     })
     
-    let testPath = process.argv.slice(2)[0] // get first argument variable (either file path or directory path) 
-    invoke({ 
-        testPath, 
-        jsPathArray: [testPath, path.dirname(testPath)] // js files in source path & in node_modules path which is in the root path.
-    })
-}
+    const jsPathArray = [testPath, path.dirname(testPath)] // js files in source path & in node_modules path which is in the root path.
 
-async function invoke({
-    jsPathArray,
-    jsFileExtension = '.js',
-    testPath, 
-    testFileExtension = '.test.js',
-}) {
     /* List all files in a directory recursively */
     console.log(`• Searching for ${testFileExtension} extension files, in path ${testPath}.`)
     let testFileArray;

@@ -11,6 +11,16 @@ console.group('• Running entrypoint application in Manager Container:')
 console.log(`- passed process arguments: ${JSON.stringify(process.argv)}`)
 const namedArgs = parseKeyValuePairSeparatedBySymbolFromArray({ array: process.argv }) // ['x=y'] --> { x: y }
 
+// check if executed directly from cli or should be invoked as module.
+if (require.main === module) { 
+    console.log('• Executed directly.')
+    cliAdapter()
+} 
+
+export {
+    cliAdapter 
+}
+
 /*
  * Usage:
  * • ./entrypoint.sh test unitTest
@@ -113,12 +123,3 @@ function cliAdapter({
     }
 }
 
-// check if executed directly from cli or should be invoked as module.
-if (require.main === module) { 
-    console.log('• Executed directly.')
-    cliAdapter()
-} 
-
-export {
-    cliAdapter 
-}

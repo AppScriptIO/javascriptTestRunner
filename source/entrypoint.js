@@ -4,7 +4,7 @@ const { execSync, spawn, spawnSync } = require('child_process')
 const filesystem = require('fs')
 
 /* Entrypoint chain */
-async function run() {
+;(async function run() {
     console.log(`\x1b[33m\x1b[1m\x1b[7m\x1b[36m%s\x1b[0m \x1b[2m\x1b[3m%s\x1b[0m`, `Container:`, `NodeJS App`)
 
     // Transpilation - babelJSCompiler
@@ -13,9 +13,7 @@ async function run() {
     await require('@dependency/addModuleResolutionPath').addModuleResolutionPath({ pathArray: [ path.dirname(require.main.filename) ] })
     // Run
     require('./script.js')
-}
-
-run().catch(error => {
+})().catch(error => {
     console.error(error);
     process.exitCode = 1;
 })

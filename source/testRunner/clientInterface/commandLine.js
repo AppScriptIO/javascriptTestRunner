@@ -5,16 +5,10 @@ import path from 'path'
 import { parseKeyValuePairSeparatedBySymbolFromArray, combineKeyValueObjectIntoString } from '@dependency/parseKeyValuePairSeparatedBySymbol'
 import { runTest } from "../script.js"
 
-if (require.main === module) { 
-    cliAdapter()
-} 
+cliAdapter()
 
-export {
-    cliAdapter 
-}
-
-function cliAdapter({
-    testType,
+export function cliAdapter({
+    testType, // absolute path to the folder where tests exist and js files to be watch for livereloading tests.
     configurationPath 
 } = {}) {
     runTest({

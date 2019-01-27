@@ -18,7 +18,7 @@ export async function runTest({
         console.log("Caught interrupt signal - test container level")
         process.exit(0)
     })
-    
+
     const jsPathArray = [testPath, path.dirname(testPath)] // js files in source path & in node_modules path which is in the root path.
 
     /* List all files in a directory recursively */

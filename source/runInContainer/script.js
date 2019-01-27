@@ -1,25 +1,7 @@
-/**
- * This script requires that the container 
- */
 import path from 'path'
 const { execSync, spawn, spawnSync } = require('child_process')
-import { parseKeyValuePairSeparatedBySymbolFromArray, combineKeyValueObjectIntoString } from '@dependency/parseKeyValuePairSeparatedBySymbol'
-const appDeploymentLifecyclePath = path.dirname(require.resolve('@dependency/appDeploymentLifecycle/package.json')),
+const deploymentScriptPath = path.dirname(require.resolve('@dependency/deploymentScript/package.json')),
       javascriptTestRunnerPath = path.normalize(`${__dirname}/../../../`)
-
-console.group('• Running entrypoint application in Manager Container:')    
-console.log(`- passed process arguments: ${JSON.stringify(process.argv)}`)
-const namedArgs = parseKeyValuePairSeparatedBySymbolFromArray({ array: process.argv }) // ['x=y'] --> { x: y }
-
-// check if executed directly from cli or should be invoked as module.
-if (require.main === module) { 
-    console.log('• Executed directly.')
-    cliAdapter()
-} 
-
-export {
-    cliAdapter 
-}
 
 /*
  * Usage:
@@ -27,7 +9,7 @@ export {
  * • ./entrypoint.sh test unitTest debug
  * • ./entrypoint.sh test unitTest path=<pathToFile>/entrypoint.test.js // single test file execution.
  */
-function unitTest(input
+export function unitTest(input
     // When running inside container, docker client communicates with MobeyLinuxVM on Windows host machine, and the volume paths will be related or referencing to the hyper-v MobyLinuxVM vm. In it here is a folder /host_mount/c that corresponds to the Widnows host filesystem drive.
     // when variable names are similar declaring the variable and assigning it in the first object causes not defined ReferenceError.
 ) {
@@ -35,16 +17,16 @@ function unitTest(input
     ({
         configuration,
         container = {
-            imageName: container.imageName = namedArgs.imageName || process.env.imageName || configuration.dockerImageName,
-            ymlFile: container.ymlFile = `${appDeploymentLifecyclePath}/deploymentContainer/deployment.dockerCompose.yml`,
+            imageName: container.imageName = configuration.dockerImageName,
+            ymlFile: container.ymlFile = `${deploymentScriptPath}/deploymentContainer/deployment.dockerCompose.yml`,
         },
         nodeFlag = {
-            debug: nodeFlag.debug = process.argv.includes('debug'),
-            break: nodeFlag.break = process.argv.includes('break')
+            debug: nodeFlag.debug = null,
+            break: nodeFlag.break = null
         },
         testRunnerModulePath = javascriptTestRunnerPath, // path of the module that includes the test framework.
-        testPath = namedArgs['path'] || configuration.directory.testPath, // path to test directory.
-        applicationPathOnHostMachine = process.env.applicationPathOnHostMachine || path.join(configuration.directory.projectPath, 'application') // this path should be already resolved to Unix path from Windows path including the drive letter, which will be used in MobyLinuxVM.
+        testPath = configuration.directory.testPath, // path to test directory.
+        applicationPathOnHostMachine = path.join(configuration.directory.projectPath, 'application') // this path should be already resolved to Unix path from Windows path including the drive letter, which will be used in MobyLinuxVM.
     } = input) // destructure nested objects to the object properties themselves.
     
     let serviceName = 'nodejs',
@@ -94,32 +76,3 @@ function unitTest(input
     })
 
 }
-
-/**
- * USAGE:
- * ./setup/entrypoint.js containerManager entrypointConfigurationKey=test testType=unitTest
- */
-function cliAdapter({
-    testType = namedArgs['testType'] || null,
-    configurationPath 
-} = {}) {
-    // use own script algorithm for finding configuration file, rather than using containerManager's passed configurationPath.
-    if(!configurationPath) 
-        configurationPath = (namedArgs.configuration) ? 
-            path.join(process.cwd(), namedArgs.configuration) : 
-            path.join(process.cwd(), 'configuration'); // For this to work - configuration arg must be kept after usage by containerManager.
-    const configuration = require(configurationPath)
-
-    switch (testType) {
-        default: 
-            case 'undefined': 
-            console.error('• No `testType` passed. Test type should be the passed - e.g. `testType=unitTest`.')
-        break;
-        case 'unitTest': {
-            unitTest({
-                configuration
-            })
-        } break;
-    }
-}
-

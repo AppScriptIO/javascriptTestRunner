@@ -3,10 +3,8 @@ import { listFileRecursively, listFileWithExtension } from './utility/listFileRe
 import { runMocha } from './mocha.js'
 import { watchFile } from './watchFile.js'
 
-invoke()
-
-async function invoke({
-    testPath = process.argv.slice(2)[0], // get first argument variable (either file path or directory path) 
+export async function runTest({
+    testPath,
     jsFileExtension = '.js',
     testFileExtension = '.test.js',
 }) {

@@ -627,9 +627,9 @@
   version "1.0.0"
   resolved "https://github.com/AppScriptIO/addModuleResolutionPath#e55f2af7f4794b48290d4cb7175cdb22ab63d65c"
 
-"@dependency/appDeploymentLifecycle@https://github.com/AppScriptIO/appDeploymentLifecycle":
+"@dependency/deploymentScript@https://github.com/AppScriptIO/deploymentScript":
   version "1.0.0"
-  resolved "https://github.com/AppScriptIO/appDeploymentLifecycle#12c469ea7f405544537038871ff09d987e8f023d"
+  resolved "https://github.com/AppScriptIO/deploymentScript#12c469ea7f405544537038871ff09d987e8f023d"
 
 "@dependency/appDeploymentManager@https://github.com/AppScriptIO/appDeploymentManager":
   version "1.0.0"

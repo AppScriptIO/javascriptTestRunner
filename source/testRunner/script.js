@@ -2,7 +2,7 @@ import path from 'path'
 import assert from 'assert' 
 import { listFileRecursively, listFileWithExtension } from './utility/listFileRecursively.js'
 import { runMocha } from './mocha.js'
-import { watchFile } from './watchFile.js'
+import { watchFile } from '@dependency/nodejsLiveReload'
 
 export async function runTest({
     targetProject, // `Project class` instance created by `scriptManager` from the configuration file of the target project.
@@ -42,7 +42,7 @@ export async function runTest({
     // add node_modules js files
     let jsFileArray = Array.prototype.concat.apply([], jsFileArrayOfArray)
     
-    let triggerCallback = () => { runMocha({ testTarget: testFileArray, jsFileArray }) } // to be run after file notification
+    let triggerCallback = () => runMocha({ testTarget: testFileArray, jsFileArray }) // to be run after file notification
     await watchFile({ triggerCallback, fileArray: Array.prototype.concat.apply([], [ jsFileArray, testFileArray ]), ignoreNodeModules: true })
     triggerCallback() // initial trigger action, to run test immediately
 }

@@ -1,14 +1,20 @@
 import path from 'path'
+import assert from 'assert' 
 import { listFileRecursively, listFileWithExtension } from './utility/listFileRecursively.js'
 import { runMocha } from './mocha.js'
 import { watchFile } from './watchFile.js'
 
 export async function runTest({
-    testPath,
+    targetProject, // `Project class` instance created by `scriptManager` from the configuration file of the target project.
+    testPath, // relative or absolute 
     jsFileExtension = '.js',
     testFileExtension = '.test.js',
-}) {
-
+} = {}) {
+    if(!path.isAbsolute(testPath)) {
+        assert(targetProject, `targetProject must be passed.`)
+        let targetProjectRootPath = targetProject.configuration.rootPath
+        testPath = path.join(targetProjectRootPath, testPath)
+    } 
     console.log(`\x1b[33m\x1b[1m\x1b[7m\x1b[36m%s\x1b[0m \x1b[2m\x1b[3m%s\x1b[0m`, `Container:`, `NodeJS App`)
 
     // Setup environment 

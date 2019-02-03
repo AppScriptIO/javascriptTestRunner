@@ -1,3 +1,6 @@
+const resolvedModule = {
+    get javascriptTestRunner() { return path.dirname( require.resolve(`@dependency/javascriptTestRunner/package.json`) ) }
+}
 // configuration example for usage with `scriptManager` module,
 let scriptConfig = {
     key: 'test',

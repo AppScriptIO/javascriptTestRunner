@@ -2,12 +2,23 @@ import filesystem from 'fs'
 import path from 'path'
 
 // returns all files in nested directory.
-function listFileRecursively({directory}) {
+function listFileRecursively({directory, ignoreRegex = [new RegExp(/node_modules/), new RegExp(/.git/)] }) {
     let results = []
     let list = filesystem.readdirSync(directory)
     list.forEach(filename => {
         let filepath = path.join(directory, filename)
-        let stat = filesystem.statSync(filepath)
+        // check if the path should be ignored
+        let shouldIgnore = ignoreRegex.some((regex) => {
+            return filepath.match(regex)
+        })
+        if(shouldIgnore)
+            return;
+        let stat;
+        try {
+            stat = filesystem.statSync(filepath)
+        } catch (error) {
+            return; // skip iteration on failed seaches.
+        }
         if (stat && stat.isDirectory()) results = results.concat(listFileRecursively({directory: filepath}))
         else results.push({ name: filename, path: filepath }) // create object
 

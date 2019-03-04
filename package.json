@@ -4,8 +4,6 @@
   "description": "Mocha test runner for unit tests and integration tests.",
   "main": "./source/entrypoint/api/transpilation.entrypoint.js",
   "bin": {
-    "testRunner": "./source/entrypoint/cli",
-    "testRunnerInContainer": "./source/entrypoint/cliRunInContainer"
   },
   "scripts": {
   },

@@ -4,7 +4,7 @@ import Mocha from 'mocha' // Mocha -Programmatic rest runner https://github.com/
 export function runMocha({
     mocha = new Mocha({
         ui: 'tdd',// Note: not using https://mochajs.org/#require interface because it doesn't work with node cli, it requires running tests through `mocha` cli as mentioned in https://github.com/mochajs/mocha/issues/1160
-        reporter: 'min' // https://mochajs.org/#list
+        reporter: 'progress' || 'min' /*min removes any console.log output outside of test/it blocks*/ // https://mochajs.org/#list
     }), // Instantiate a Mocha instance.
     testTarget,
     jsFileArray

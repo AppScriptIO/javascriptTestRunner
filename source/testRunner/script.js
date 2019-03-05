@@ -4,6 +4,8 @@ import { listFileRecursively, listFileWithExtension } from './utility/listFileRe
 import { runMocha } from './mocha.js'
 import { watchFile } from '@dependency/nodejsLiveReload'
 import { promises as filesystem } from 'fs'
+import childProcess from 'child_process'
+import runFunctionInVM from './utility/runFunctionInVM.js'
 
 export async function runTest({
     targetProject, // `Project class` instance created by `scriptManager` from the configuration file of the target project.
@@ -46,8 +48,14 @@ export async function runTest({
     // add node_modules js files
     let jsFileArray = Array.prototype.concat.apply([], jsFileArrayOfArray)
     
-    let triggerCallback = () => runMocha({ testTarget: testFileArray, jsFileArray }) // to be run after file notification
-    await watchFile({ triggerCallback, fileArray: Array.prototype.concat.apply([], [ jsFileArray, testFileArray ]), ignoreNodeModules: true })
+    let triggerCallback = () => { // to be run after file notification
+        // childProcess.fork
+        runFunctionInVM(runMocha, [{ testTarget: testFileArray, jsFileArray }])
+        // runMocha({ testTarget: testFileArray, jsFileArray }) 
+    }
+
+    await watchFile({ triggerCallback, fileArray: Array.prototype.concat.apply([], [ jsFileArray, testFileArray ]), ignoreNodeModules: true, logMessage: false })
+
     triggerCallback() // initial trigger action, to run test immediately
 }
 

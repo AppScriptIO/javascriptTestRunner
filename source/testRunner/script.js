@@ -3,6 +3,7 @@ import assert from 'assert'
 import { listFileRecursively, listFileWithExtension } from './utility/listFileRecursively.js'
 import { runMocha } from './mocha.js'
 import { watchFile } from '@dependency/nodejsLiveReload'
+import { promises as filesystem } from 'fs'
 
 export async function runTest({
     targetProject, // `Project class` instance created by `scriptManager` from the configuration file of the target project.
@@ -10,11 +11,6 @@ export async function runTest({
     jsFileExtension = '.js',
     testFileExtension = '.test.js',
 } = {}) {
-    if(!path.isAbsolute(testPath)) {
-        assert(targetProject, `targetProject must be passed.`)
-        let targetProjectRootPath = targetProject.configuration.rootPath
-        testPath = path.join(targetProjectRootPath, testPath)
-    } 
     console.log(`\x1b[33m\x1b[1m\x1b[7m\x1b[36m%s\x1b[0m \x1b[2m\x1b[3m%s\x1b[0m`, `Container:`, `NodeJS App`)
 
     // Setup environment 
@@ -24,13 +20,21 @@ export async function runTest({
         console.log("Caught interrupt signal - test container level")
         process.exit(0)
     })
+    
+    assert(targetProject, `targetProject must be passed.`)
+    let targetProjectRootPath = targetProject.configuration.rootPath
 
-    const jsPathArray = [testPath, path.dirname(testPath)] // js files in source path & in node_modules path which is in the root path.
-
+    if(!path.isAbsolute(testPath)) {
+        testPath = path.join(targetProjectRootPath, testPath)
+    } 
+    let jsPathArray = [targetProjectRootPath]
+    if(await filesystem.lstat(testPath).then(statObject => statObject.isDirectory()) ) jsPathArray.push(testPath)
+    
     /* List all files in a directory recursively */
     console.log(`• Searching for ${testFileExtension} extension files, in path ${testPath}.`)
     let testFileArray;
     if(testPath.endsWith(testFileExtension)) { // file path
+        console.log(testPath)
         testFileArray = [testPath]
     } else { // directory path
         testFileArray = listFileWithExtension({ directory: testPath, extension: testFileExtension })

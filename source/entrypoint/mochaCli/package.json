@@ -1,0 +1,6 @@
+{
+    "main": "../../testRunner/clientInterface/mochaSubprocessCli.js",
+    "name": "@",
+    "version": "0.0.0"
+}
+  

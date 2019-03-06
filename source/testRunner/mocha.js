@@ -1,5 +1,4 @@
-import { invalidateRequiredModule, invalidateRequiredModuleEventHandler } from './utility/invalidateRequiredModule.js'
-import Mocha from 'mocha' // Mocha -Programmatic rest runner https://github.com/mochajs/mocha/wiki/Using-mocha-programmatically
+import Mocha from 'mocha' // Mocha -Programmatic rest runner https://github.com/mochajs/mocha/wiki/Using-mocha-programmatically 
 
 export function runMocha({
     mocha = new Mocha({
@@ -7,11 +6,14 @@ export function runMocha({
         reporter: 'progress' || 'min' /*min removes any console.log output outside of test/it blocks*/ // https://mochajs.org/#list
     }), // Instantiate a Mocha instance.
     testTarget,
-    jsFileArray
+    jsFileArray,
+    shouldInvalidateRequireModule = false // invalidation isn't needed anymore as this module is run in a subprocess
 } = {}) {
-
-    invalidateRequiredModuleEventHandler({ mochaInstance: mocha })
-    invalidateRequiredModule({ fileArray: jsFileArray })
+    if(shouldInvalidateRequireModule) {
+        const { invalidateRequiredModule, invalidateRequiredModuleEventHandler } = './utility/invalidateRequiredModule.js' 
+        invalidateRequiredModuleEventHandler({ mochaInstance: mocha })
+        invalidateRequiredModule({ fileArray: jsFileArray })
+    }
 
     // Add each .test.js file to the mocha instance
     if(Array.isArray(testTarget)) { // treat test target as array of files.

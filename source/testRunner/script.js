@@ -1,11 +1,10 @@
 import path from 'path'
 import assert from 'assert' 
 import { listFileRecursively, listFileWithExtension } from './utility/listFileRecursively.js'
-import { runMocha } from './mocha.js'
+const mochaModule = path.join(__dirname, '../entrypoint/mochaCli/transpilation.entrypoint.js') // mocha cli for running using nodejs spawn child process interface (accepting only module paths)
 import { watchFile } from '@dependency/nodejsLiveReload'
 import { promises as filesystem } from 'fs'
 import childProcess from 'child_process'
-import runFunctionInVM from './utility/runFunctionInVM.js'
 
 export async function runTest({
     targetProject, // `Project class` instance created by `scriptManager` from the configuration file of the target project.
@@ -47,15 +46,20 @@ export async function runTest({
     })
     // add node_modules js files
     let jsFileArray = Array.prototype.concat.apply([], jsFileArrayOfArray)
-    
+
+    let stringifyArgs = JSON.stringify([{ testTarget: testFileArray, jsFileArray }]) // parametrs for mocha module.
+    let subprocess; // subprocess reference to control termination.
+    function runMochaInSubprocess() { // running in subprocess prevents conflicts between tests and allows to control the test and terminate it when needed.
+        subprocess = childProcess.fork(mochaModule, [stringifyArgs], { stdio: [0, 1, 2, 'ipc'] })
+        // subprocess.on('exit', () => console.log(`Test subprocess ${subprocess.pid} exited.`));
+    }
     let triggerCallback = () => { // to be run after file notification
-        // childProcess.fork
-        runFunctionInVM(runMocha, [{ testTarget: testFileArray, jsFileArray }])
-        // runMocha({ testTarget: testFileArray, jsFileArray }) 
+        subprocess.kill('SIGINT')
+        runMochaInSubprocess()
     }
 
     await watchFile({ triggerCallback, fileArray: Array.prototype.concat.apply([], [ jsFileArray, testFileArray ]), ignoreNodeModules: true, logMessage: false })
 
-    triggerCallback() // initial trigger action, to run test immediately
+    runMochaInSubprocess() // initial trigger action, to run test immediately
 }
 

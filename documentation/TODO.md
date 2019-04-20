@@ -1,6 +1,6 @@
 ### TODO:
  - Front-end testing Work with JSDom module for frontend testing using nodejs.
-
+- Deal with nodejs inspector API. May involve changing `scriptManager` & `scriptExecution` too. Currently its possible to use inspector programmatic API, but to allow live reload each test session should be kept alive e.g. using `setTimeout` to allow for inspecting object values etc.
 ___
 
  ### Done:

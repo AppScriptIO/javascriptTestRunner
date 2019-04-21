@@ -66,3 +66,21 @@ export async function runTest({
 
   runMochaInSubprocess() // initial trigger action, to run test immediately
 }
+
+/**
+ * Allows to use Nodejs inspector with the current way tests are run, where tests are run in subprocesses and no Nodejs flags are passed.
+ * Currently its possible to use inspector programmatic API, but to allow livereload each test subprocess should be kept alive e.g. using `setTimeout` to allow for inspecting object values etc.
+ * Usage:
+ *  - execute this function in the top of a test.
+ *  - insert `debugger` statement in the test files to break after refreshing process.
+ *
+ */
+export function subprocessInspector({ port = 9229, host = 'localhost', shouldbreak = true } = {}) {
+  const inspector = require('inspector')
+  inspector.open(port, host, shouldbreak)
+  // Keep Node alive to allow for inspecting objects.
+  process.on('beforeExit', () => {
+    setTimeout(() => {}, 1000000000)
+  })
+  return inspector
+}

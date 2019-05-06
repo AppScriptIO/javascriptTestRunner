@@ -46,6 +46,7 @@ export async function runTest({
   let jsFileArrayOfArray = jsPathArray.map(jsPath => {
     return listFileWithExtension({ directory: jsPath, extension: jsFileExtension })
   })
+  //TODO: Must add excluding directory option. e.g. './distribution'.
   // add node_modules js files
   let watchFileArray = Array.prototype.concat.apply([], jsFileArrayOfArray)
 
@@ -58,7 +59,7 @@ export async function runTest({
   }
   let triggerCallback = () => {
     // to be run after file notification
-    subprocess.kill('SIGINT')
+    subprocess && subprocess.kill('SIGINT')
     runMochaInSubprocess()
   }
 

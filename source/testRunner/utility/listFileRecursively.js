@@ -1,41 +1,40 @@
-import filesystem from 'fs'
-import path from 'path'
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.listFileRecursively = listFileRecursively;exports.listFileWithExtension = listFileWithExtension;var _fs = _interopRequireDefault(require("fs"));
+var _path = _interopRequireDefault(require("path"));
 
-// returns all files in nested directory.
+
 function listFileRecursively({ directory, ignoreRegex = [new RegExp(/node_modules/), new RegExp(/.git/)] }) {
-  let results = []
-  let list = filesystem.readdirSync(directory)
+  let results = [];
+  let list = _fs.default.readdirSync(directory);
   list.forEach(filename => {
-    let filepath = path.join(directory, filename)
-    // check if the path should be ignored
+    let filepath = _path.default.join(directory, filename);
+
     let shouldIgnore = ignoreRegex.some(regex => {
-      return filepath.match(regex)
-    })
-    if (shouldIgnore) return
-    let stat
+      return filepath.match(regex);
+    });
+    if (shouldIgnore) return;
+    let stat;
     try {
-      stat = filesystem.statSync(filepath)
+      stat = _fs.default.statSync(filepath);
     } catch (error) {
-      return // skip iteration on failed seaches.
+      return;
     }
-    if (stat && stat.isDirectory()) results = results.concat(listFileRecursively({ directory: filepath }))
-    else results.push({ name: filename, path: filepath }) // create object
-  })
-  return results
+    if (stat && stat.isDirectory()) results = results.concat(listFileRecursively({ directory: filepath }));else
+    results.push({ name: filename, path: filepath });
+  });
+  return results;
 }
 
-// interface for listFieRecusively function that returns an array of file paths, and filters files with the specified extension.
-function listFileWithExtension({ directory, extension /*Array*/ }) {
-  if (!Array.isArray(extension)) extension = [extension] // support array or string
-  return listFileRecursively({ directory })
-    .filter(file => {
-      // Only keep the files with the extension
-      return extension.some(suffix => file.name.substr(-suffix.length) === suffix)
-    })
-    .reduce((accumulator, currentValue) => {
-      accumulator.push(currentValue.path)
-      return accumulator
-    }, [])
-}
 
-export { listFileRecursively, listFileWithExtension }
+function listFileWithExtension({ directory, extension }) {
+  if (!Array.isArray(extension)) extension = [extension];
+  return listFileRecursively({ directory }).
+  filter(file => {
+
+    return extension.some(suffix => file.name.substr(-suffix.length) === suffix);
+  }).
+  reduce((accumulator, currentValue) => {
+    accumulator.push(currentValue.path);
+    return accumulator;
+  }, []);
+}
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uL3NvdXJjZS90ZXN0UnVubmVyL3V0aWxpdHkvbGlzdEZpbGVSZWN1cnNpdmVseS5qcyJdLCJuYW1lcyI6WyJsaXN0RmlsZVJlY3Vyc2l2ZWx5IiwiZGlyZWN0b3J5IiwiaWdub3JlUmVnZXgiLCJSZWdFeHAiLCJyZXN1bHRzIiwibGlzdCIsImZpbGVzeXN0ZW0iLCJyZWFkZGlyU3luYyIsImZvckVhY2giLCJmaWxlbmFtZSIsImZpbGVwYXRoIiwicGF0aCIsImpvaW4iLCJzaG91bGRJZ25vcmUiLCJzb21lIiwicmVnZXgiLCJtYXRjaCIsInN0YXQiLCJzdGF0U3luYyIsImVycm9yIiwiaXNEaXJlY3RvcnkiLCJjb25jYXQiLCJwdXNoIiwibmFtZSIsImxpc3RGaWxlV2l0aEV4dGVuc2lvbiIsImV4dGVuc2lvbiIsIkFycmF5IiwiaXNBcnJheSIsImZpbHRlciIsImZpbGUiLCJzdWZmaXgiLCJzdWJzdHIiLCJsZW5ndGgiLCJyZWR1Y2UiLCJhY2N1bXVsYXRvciIsImN1cnJlbnRWYWx1ZSJdLCJtYXBwaW5ncyI6IndRQUFBO0FBQ0E7OztBQUdBLFNBQVNBLG1CQUFULENBQTZCLEVBQUVDLFNBQUYsRUFBYUMsV0FBVyxHQUFHLENBQUMsSUFBSUMsTUFBSixDQUFXLGNBQVgsQ0FBRCxFQUE2QixJQUFJQSxNQUFKLENBQVcsTUFBWCxDQUE3QixDQUEzQixFQUE3QixFQUE0RztBQUMxRyxNQUFJQyxPQUFPLEdBQUcsRUFBZDtBQUNBLE1BQUlDLElBQUksR0FBR0MsWUFBV0MsV0FBWCxDQUF1Qk4sU0FBdkIsQ0FBWDtBQUNBSSxFQUFBQSxJQUFJLENBQUNHLE9BQUwsQ0FBYUMsUUFBUSxJQUFJO0FBQ3ZCLFFBQUlDLFFBQVEsR0FBR0MsY0FBS0MsSUFBTCxDQUFVWCxTQUFWLEVBQXFCUSxRQUFyQixDQUFmOztBQUVBLFFBQUlJLFlBQVksR0FBR1gsV0FBVyxDQUFDWSxJQUFaLENBQWlCQyxLQUFLLElBQUk7QUFDM0MsYUFBT0wsUUFBUSxDQUFDTSxLQUFULENBQWVELEtBQWYsQ0FBUDtBQUNELEtBRmtCLENBQW5CO0FBR0EsUUFBSUYsWUFBSixFQUFrQjtBQUNsQixRQUFJSSxJQUFKO0FBQ0EsUUFBSTtBQUNGQSxNQUFBQSxJQUFJLEdBQUdYLFlBQVdZLFFBQVgsQ0FBb0JSLFFBQXBCLENBQVA7QUFDRCxLQUZELENBRUUsT0FBT1MsS0FBUCxFQUFjO0FBQ2Q7QUFDRDtBQUNELFFBQUlGLElBQUksSUFBSUEsSUFBSSxDQUFDRyxXQUFMLEVBQVosRUFBZ0NoQixPQUFPLEdBQUdBLE9BQU8sQ0FBQ2lCLE1BQVIsQ0FBZXJCLG1CQUFtQixDQUFDLEVBQUVDLFNBQVMsRUFBRVMsUUFBYixFQUFELENBQWxDLENBQVYsQ0FBaEM7QUFDS04sSUFBQUEsT0FBTyxDQUFDa0IsSUFBUixDQUFhLEVBQUVDLElBQUksRUFBRWQsUUFBUixFQUFrQkUsSUFBSSxFQUFFRCxRQUF4QixFQUFiO0FBQ04sR0FmRDtBQWdCQSxTQUFPTixPQUFQO0FBQ0Q7OztBQUdELFNBQVNvQixxQkFBVCxDQUErQixFQUFFdkIsU0FBRixFQUFhd0IsU0FBYixFQUEvQixFQUFtRTtBQUNqRSxNQUFJLENBQUNDLEtBQUssQ0FBQ0MsT0FBTixDQUFjRixTQUFkLENBQUwsRUFBK0JBLFNBQVMsR0FBRyxDQUFDQSxTQUFELENBQVo7QUFDL0IsU0FBT3pCLG1CQUFtQixDQUFDLEVBQUVDLFNBQUYsRUFBRCxDQUFuQjtBQUNKMkIsRUFBQUEsTUFESSxDQUNHQyxJQUFJLElBQUk7O0FBRWQsV0FBT0osU0FBUyxDQUFDWCxJQUFWLENBQWVnQixNQUFNLElBQUlELElBQUksQ0FBQ04sSUFBTCxDQUFVUSxNQUFWLENBQWlCLENBQUNELE1BQU0sQ0FBQ0UsTUFBekIsTUFBcUNGLE1BQTlELENBQVA7QUFDRCxHQUpJO0FBS0pHLEVBQUFBLE1BTEksQ0FLRyxDQUFDQyxXQUFELEVBQWNDLFlBQWQsS0FBK0I7QUFDckNELElBQUFBLFdBQVcsQ0FBQ1osSUFBWixDQUFpQmEsWUFBWSxDQUFDeEIsSUFBOUI7QUFDQSxXQUFPdUIsV0FBUDtBQUNELEdBUkksRUFRRixFQVJFLENBQVA7QUFTRCIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBmaWxlc3lzdGVtIGZyb20gJ2ZzJ1xuaW1wb3J0IHBhdGggZnJvbSAncGF0aCdcblxuLy8gcmV0dXJucyBhbGwgZmlsZXMgaW4gbmVzdGVkIGRpcmVjdG9yeS5cbmZ1bmN0aW9uIGxpc3RGaWxlUmVjdXJzaXZlbHkoeyBkaXJlY3RvcnksIGlnbm9yZVJlZ2V4ID0gW25ldyBSZWdFeHAoL25vZGVfbW9kdWxlcy8pLCBuZXcgUmVnRXhwKC8uZ2l0LyldIH0pIHtcbiAgbGV0IHJlc3VsdHMgPSBbXVxuICBsZXQgbGlzdCA9IGZpbGVzeXN0ZW0ucmVhZGRpclN5bmMoZGlyZWN0b3J5KVxuICBsaXN0LmZvckVhY2goZmlsZW5hbWUgPT4ge1xuICAgIGxldCBmaWxlcGF0aCA9IHBhdGguam9pbihkaXJlY3RvcnksIGZpbGVuYW1lKVxuICAgIC8vIGNoZWNrIGlmIHRoZSBwYXRoIHNob3VsZCBiZSBpZ25vcmVkXG4gICAgbGV0IHNob3VsZElnbm9yZSA9IGlnbm9yZVJlZ2V4LnNvbWUocmVnZXggPT4ge1xuICAgICAgcmV0dXJuIGZpbGVwYXRoLm1hdGNoKHJlZ2V4KVxuICAgIH0pXG4gICAgaWYgKHNob3VsZElnbm9yZSkgcmV0dXJuXG4gICAgbGV0IHN0YXRcbiAgICB0cnkge1xuICAgICAgc3RhdCA9IGZpbGVzeXN0ZW0uc3RhdFN5bmMoZmlsZXBhdGgpXG4gICAgfSBjYXRjaCAoZXJyb3IpIHtcbiAgICAgIHJldHVybiAvLyBza2lwIGl0ZXJhdGlvbiBvbiBmYWlsZWQgc2VhY2hlcy5cbiAgICB9XG4gICAgaWYgKHN0YXQgJiYgc3RhdC5pc0RpcmVjdG9yeSgpKSByZXN1bHRzID0gcmVzdWx0cy5jb25jYXQobGlzdEZpbGVSZWN1cnNpdmVseSh7IGRpcmVjdG9yeTogZmlsZXBhdGggfSkpXG4gICAgZWxzZSByZXN1bHRzLnB1c2goeyBuYW1lOiBmaWxlbmFtZSwgcGF0aDogZmlsZXBhdGggfSkgLy8gY3JlYXRlIG9iamVjdFxuICB9KVxuICByZXR1cm4gcmVzdWx0c1xufVxuXG4vLyBpbnRlcmZhY2UgZm9yIGxpc3RGaWVSZWN1c2l2ZWx5IGZ1bmN0aW9uIHRoYXQgcmV0dXJucyBhbiBhcnJheSBvZiBmaWxlIHBhdGhzLCBhbmQgZmlsdGVycyBmaWxlcyB3aXRoIHRoZSBzcGVjaWZpZWQgZXh0ZW5zaW9uLlxuZnVuY3Rpb24gbGlzdEZpbGVXaXRoRXh0ZW5zaW9uKHsgZGlyZWN0b3J5LCBleHRlbnNpb24gLypBcnJheSovIH0pIHtcbiAgaWYgKCFBcnJheS5pc0FycmF5KGV4dGVuc2lvbikpIGV4dGVuc2lvbiA9IFtleHRlbnNpb25dIC8vIHN1cHBvcnQgYXJyYXkgb3Igc3RyaW5nXG4gIHJldHVybiBsaXN0RmlsZVJlY3Vyc2l2ZWx5KHsgZGlyZWN0b3J5IH0pXG4gICAgLmZpbHRlcihmaWxlID0+IHtcbiAgICAgIC8vIE9ubHkga2VlcCB0aGUgZmlsZXMgd2l0aCB0aGUgZXh0ZW5zaW9uXG4gICAgICByZXR1cm4gZXh0ZW5zaW9uLnNvbWUoc3VmZml4ID0+IGZpbGUubmFtZS5zdWJzdHIoLXN1ZmZpeC5sZW5ndGgpID09PSBzdWZmaXgpXG4gICAgfSlcbiAgICAucmVkdWNlKChhY2N1bXVsYXRvciwgY3VycmVudFZhbHVlKSA9PiB7XG4gICAgICBhY2N1bXVsYXRvci5wdXNoKGN1cnJlbnRWYWx1ZS5wYXRoKVxuICAgICAgcmV0dXJuIGFjY3VtdWxhdG9yXG4gICAgfSwgW10pXG59XG5cbmV4cG9ydCB7IGxpc3RGaWxlUmVjdXJzaXZlbHksIGxpc3RGaWxlV2l0aEV4dGVuc2lvbiB9XG4iXX0=

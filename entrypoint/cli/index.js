@@ -13,10 +13,6 @@ if (filesystem.existsSync(projectConfig.directory.distribution)) {
   const { Compiler } = require('@dependency/javascriptTranspilation')
   let compiler = new Compiler()
   compiler.requireHook()
-  compiler.outputTranspilation()
+  // compiler.outputTranspilation()
   module.exports = require(path.join(projectConfig.directory.source, projectConfig.entrypoint.cli))
-  // way to output runtime transpilation in circular dependency.
-  // process.nextTick(() => {
-  //   console.log(compiler.loadedFiles) // write any newer files transpiled in successive usage of this module.
-  // })
 }

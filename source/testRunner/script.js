@@ -1,7 +1,7 @@
 import path from 'path'
 import assert from 'assert'
 import { listFileRecursively, listFileWithExtension } from './utility/listFileRecursively.js'
-const mochaModule = path.join(__dirname, '../entrypoint/mochaCli/transpilation.entrypoint.js') // mocha cli for running using nodejs spawn child process interface (accepting only module paths)
+const mochaModule = path.join(__dirname, '../../entrypoint/cli/index.js') // mocha cli for running using nodejs spawn child process interface (accepting only module paths)
 import { watchFile } from '@dependency/nodejsLiveReload'
 import { promises as filesystem } from 'fs'
 import childProcess from 'child_process'

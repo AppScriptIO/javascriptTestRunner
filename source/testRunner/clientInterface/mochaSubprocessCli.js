@@ -1,7 +1,8 @@
-/**
- * Interface for running mocha function through childprocess.spawn api (as it allows only a module path to be passed as parameter).
- */
-import { runMocha } from '../mocha'
+"use strict";
 
-let args = JSON.parse(process.argv[2])
-runMocha(...args)
+
+var _mocha = require("../mocha");
+
+let args = JSON.parse(process.argv[2]);
+(0, _mocha.runMocha)(...args);
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uL3NvdXJjZS90ZXN0UnVubmVyL2NsaWVudEludGVyZmFjZS9tb2NoYVN1YnByb2Nlc3NDbGkuanMiXSwibmFtZXMiOlsiYXJncyIsIkpTT04iLCJwYXJzZSIsInByb2Nlc3MiLCJhcmd2Il0sIm1hcHBpbmdzIjoiOzs7QUFHQTs7QUFFQSxJQUFJQSxJQUFJLEdBQUdDLElBQUksQ0FBQ0MsS0FBTCxDQUFXQyxPQUFPLENBQUNDLElBQVIsQ0FBYSxDQUFiLENBQVgsQ0FBWDtBQUNBLHFCQUFTLEdBQUdKLElBQVoiLCJzb3VyY2VzQ29udGVudCI6WyIvKipcbiAqIEludGVyZmFjZSBmb3IgcnVubmluZyBtb2NoYSBmdW5jdGlvbiB0aHJvdWdoIGNoaWxkcHJvY2Vzcy5zcGF3biBhcGkgKGFzIGl0IGFsbG93cyBvbmx5IGEgbW9kdWxlIHBhdGggdG8gYmUgcGFzc2VkIGFzIHBhcmFtZXRlcikuXG4gKi9cbmltcG9ydCB7IHJ1bk1vY2hhIH0gZnJvbSAnLi4vbW9jaGEnXG5cbmxldCBhcmdzID0gSlNPTi5wYXJzZShwcm9jZXNzLmFyZ3ZbMl0pXG5ydW5Nb2NoYSguLi5hcmdzKVxuIl19

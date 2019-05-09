@@ -1,18 +1,19 @@
-/**
- * hakish way to invalidate all required modules caches in the Node process, which will allow for changes in .test.js or .js files to propagate in the re-started mocha tests.
- * Where test files are invalidated by mocha's 'require' hook and other files (.js) are invalidated with 'beforeAll' hook. (Could use only 'beforeAll' but this is not a straight forward method anyway.)
- **/
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.invalidateRequiredModule = invalidateRequiredModule;exports.invalidateRequiredModuleEventHandler = invalidateRequiredModuleEventHandler;
 
-export function invalidateRequiredModule({ fileArray }) {
-  // invalidate js files as well.
-  console.log(`\x1b[2m%s\x1b[0m`, `• [Cleanning up require in current node process] Invalidating require cache of ${fileArray.length} file + test files.\n`)
+
+
+
+function invalidateRequiredModule({ fileArray }) {
+
+  console.log(`\x1b[2m%s\x1b[0m`, `• [Cleanning up require in current node process] Invalidating require cache of ${fileArray.length} file + test files.\n`);
   fileArray.forEach(file => {
-    delete require.cache[file]
-  })
+    delete require.cache[file];
+  });
 }
-export function invalidateRequiredModuleEventHandler({ mochaInstance }) {
-  mochaInstance.suite.on('require', function(global, file) {
-    // invalidate only test files, not the child files required in test files. i.e. ISSUE: any file required inside test files won't be discarded and reloaded.
-    delete require.cache[file]
-  }) // Fixes issue ❗ - Allow running multiple instances of `mocha` by reseting require.cache https://github.com/mochajs/mocha/issues/995
+function invalidateRequiredModuleEventHandler({ mochaInstance }) {
+  mochaInstance.suite.on('require', function (global, file) {
+
+    delete require.cache[file];
+  });
 }
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uL3NvdXJjZS90ZXN0UnVubmVyL3V0aWxpdHkvaW52YWxpZGF0ZVJlcXVpcmVkTW9kdWxlLmpzIl0sIm5hbWVzIjpbImludmFsaWRhdGVSZXF1aXJlZE1vZHVsZSIsImZpbGVBcnJheSIsImNvbnNvbGUiLCJsb2ciLCJsZW5ndGgiLCJmb3JFYWNoIiwiZmlsZSIsInJlcXVpcmUiLCJjYWNoZSIsImludmFsaWRhdGVSZXF1aXJlZE1vZHVsZUV2ZW50SGFuZGxlciIsIm1vY2hhSW5zdGFuY2UiLCJzdWl0ZSIsIm9uIiwiZ2xvYmFsIl0sIm1hcHBpbmdzIjoiOzs7OztBQUtPLFNBQVNBLHdCQUFULENBQWtDLEVBQUVDLFNBQUYsRUFBbEMsRUFBaUQ7O0FBRXREQyxFQUFBQSxPQUFPLENBQUNDLEdBQVIsQ0FBYSxrQkFBYixFQUFpQyxrRkFBaUZGLFNBQVMsQ0FBQ0csTUFBTyx1QkFBbkk7QUFDQUgsRUFBQUEsU0FBUyxDQUFDSSxPQUFWLENBQWtCQyxJQUFJLElBQUk7QUFDeEIsV0FBT0MsT0FBTyxDQUFDQyxLQUFSLENBQWNGLElBQWQsQ0FBUDtBQUNELEdBRkQ7QUFHRDtBQUNNLFNBQVNHLG9DQUFULENBQThDLEVBQUVDLGFBQUYsRUFBOUMsRUFBaUU7QUFDdEVBLEVBQUFBLGFBQWEsQ0FBQ0MsS0FBZCxDQUFvQkMsRUFBcEIsQ0FBdUIsU0FBdkIsRUFBa0MsVUFBU0MsTUFBVCxFQUFpQlAsSUFBakIsRUFBdUI7O0FBRXZELFdBQU9DLE9BQU8sQ0FBQ0MsS0FBUixDQUFjRixJQUFkLENBQVA7QUFDRCxHQUhEO0FBSUQiLCJzb3VyY2VzQ29udGVudCI6WyIvKipcbiAqIGhha2lzaCB3YXkgdG8gaW52YWxpZGF0ZSBhbGwgcmVxdWlyZWQgbW9kdWxlcyBjYWNoZXMgaW4gdGhlIE5vZGUgcHJvY2Vzcywgd2hpY2ggd2lsbCBhbGxvdyBmb3IgY2hhbmdlcyBpbiAudGVzdC5qcyBvciAuanMgZmlsZXMgdG8gcHJvcGFnYXRlIGluIHRoZSByZS1zdGFydGVkIG1vY2hhIHRlc3RzLlxuICogV2hlcmUgdGVzdCBmaWxlcyBhcmUgaW52YWxpZGF0ZWQgYnkgbW9jaGEncyAncmVxdWlyZScgaG9vayBhbmQgb3RoZXIgZmlsZXMgKC5qcykgYXJlIGludmFsaWRhdGVkIHdpdGggJ2JlZm9yZUFsbCcgaG9vay4gKENvdWxkIHVzZSBvbmx5ICdiZWZvcmVBbGwnIGJ1dCB0aGlzIGlzIG5vdCBhIHN0cmFpZ2h0IGZvcndhcmQgbWV0aG9kIGFueXdheS4pXG4gKiovXG5cbmV4cG9ydCBmdW5jdGlvbiBpbnZhbGlkYXRlUmVxdWlyZWRNb2R1bGUoeyBmaWxlQXJyYXkgfSkge1xuICAvLyBpbnZhbGlkYXRlIGpzIGZpbGVzIGFzIHdlbGwuXG4gIGNvbnNvbGUubG9nKGBcXHgxYlsybSVzXFx4MWJbMG1gLCBg4oCiIFtDbGVhbm5pbmcgdXAgcmVxdWlyZSBpbiBjdXJyZW50IG5vZGUgcHJvY2Vzc10gSW52YWxpZGF0aW5nIHJlcXVpcmUgY2FjaGUgb2YgJHtmaWxlQXJyYXkubGVuZ3RofSBmaWxlICsgdGVzdCBmaWxlcy5cXG5gKVxuICBmaWxlQXJyYXkuZm9yRWFjaChmaWxlID0+IHtcbiAgICBkZWxldGUgcmVxdWlyZS5jYWNoZVtmaWxlXVxuICB9KVxufVxuZXhwb3J0IGZ1bmN0aW9uIGludmFsaWRhdGVSZXF1aXJlZE1vZHVsZUV2ZW50SGFuZGxlcih7IG1vY2hhSW5zdGFuY2UgfSkge1xuICBtb2NoYUluc3RhbmNlLnN1aXRlLm9uKCdyZXF1aXJlJywgZnVuY3Rpb24oZ2xvYmFsLCBmaWxlKSB7XG4gICAgLy8gaW52YWxpZGF0ZSBvbmx5IHRlc3QgZmlsZXMsIG5vdCB0aGUgY2hpbGQgZmlsZXMgcmVxdWlyZWQgaW4gdGVzdCBmaWxlcy4gaS5lLiBJU1NVRTogYW55IGZpbGUgcmVxdWlyZWQgaW5zaWRlIHRlc3QgZmlsZXMgd29uJ3QgYmUgZGlzY2FyZGVkIGFuZCByZWxvYWRlZC5cbiAgICBkZWxldGUgcmVxdWlyZS5jYWNoZVtmaWxlXVxuICB9KSAvLyBGaXhlcyBpc3N1ZSDinZcgLSBBbGxvdyBydW5uaW5nIG11bHRpcGxlIGluc3RhbmNlcyBvZiBgbW9jaGFgIGJ5IHJlc2V0aW5nIHJlcXVpcmUuY2FjaGUgaHR0cHM6Ly9naXRodWIuY29tL21vY2hhanMvbW9jaGEvaXNzdWVzLzk5NVxufVxuIl19

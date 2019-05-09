@@ -1,12 +1,13 @@
-// Append indentation for all logs in this subprocess.
-export function consoleLogOverwrite() {
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.consoleLogOverwrite = consoleLogOverwrite;
+function consoleLogOverwrite() {
   console.log = new Proxy(console.log, {
     apply(target, thisArg, argumentsList) {
       const blueColor = `\u001b[44m`,
-        resetColor = `\u001b[0m` // https://misc.flogisoft.com/bash/tip_colors_and_formatting
-      const prefix = `${blueColor}  ${resetColor}`
-      process.stdout.write(prefix)
-      return Reflect.apply(target, thisArg, argumentsList)
-    },
-  })
+      resetColor = `\u001b[0m`;
+      const prefix = `${blueColor}  ${resetColor}`;
+      process.stdout.write(prefix);
+      return Reflect.apply(target, thisArg, argumentsList);
+    } });
+
 }
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uL3NvdXJjZS90ZXN0UnVubmVyL3V0aWxpdHkvY29uc29sZUxvZ092ZXJ3cml0ZS5qcyJdLCJuYW1lcyI6WyJjb25zb2xlTG9nT3ZlcndyaXRlIiwiY29uc29sZSIsImxvZyIsIlByb3h5IiwiYXBwbHkiLCJ0YXJnZXQiLCJ0aGlzQXJnIiwiYXJndW1lbnRzTGlzdCIsImJsdWVDb2xvciIsInJlc2V0Q29sb3IiLCJwcmVmaXgiLCJwcm9jZXNzIiwic3Rkb3V0Iiwid3JpdGUiLCJSZWZsZWN0Il0sIm1hcHBpbmdzIjoiO0FBQ08sU0FBU0EsbUJBQVQsR0FBK0I7QUFDcENDLEVBQUFBLE9BQU8sQ0FBQ0MsR0FBUixHQUFjLElBQUlDLEtBQUosQ0FBVUYsT0FBTyxDQUFDQyxHQUFsQixFQUF1QjtBQUNuQ0UsSUFBQUEsS0FBSyxDQUFDQyxNQUFELEVBQVNDLE9BQVQsRUFBa0JDLGFBQWxCLEVBQWlDO0FBQ3BDLFlBQU1DLFNBQVMsR0FBSSxZQUFuQjtBQUNFQyxNQUFBQSxVQUFVLEdBQUksV0FEaEI7QUFFQSxZQUFNQyxNQUFNLEdBQUksR0FBRUYsU0FBVSxLQUFJQyxVQUFXLEVBQTNDO0FBQ0FFLE1BQUFBLE9BQU8sQ0FBQ0MsTUFBUixDQUFlQyxLQUFmLENBQXFCSCxNQUFyQjtBQUNBLGFBQU9JLE9BQU8sQ0FBQ1YsS0FBUixDQUFjQyxNQUFkLEVBQXNCQyxPQUF0QixFQUErQkMsYUFBL0IsQ0FBUDtBQUNELEtBUGtDLEVBQXZCLENBQWQ7O0FBU0QiLCJzb3VyY2VzQ29udGVudCI6WyIvLyBBcHBlbmQgaW5kZW50YXRpb24gZm9yIGFsbCBsb2dzIGluIHRoaXMgc3VicHJvY2Vzcy5cbmV4cG9ydCBmdW5jdGlvbiBjb25zb2xlTG9nT3ZlcndyaXRlKCkge1xuICBjb25zb2xlLmxvZyA9IG5ldyBQcm94eShjb25zb2xlLmxvZywge1xuICAgIGFwcGx5KHRhcmdldCwgdGhpc0FyZywgYXJndW1lbnRzTGlzdCkge1xuICAgICAgY29uc3QgYmx1ZUNvbG9yID0gYFxcdTAwMWJbNDRtYCxcbiAgICAgICAgcmVzZXRDb2xvciA9IGBcXHUwMDFiWzBtYCAvLyBodHRwczovL21pc2MuZmxvZ2lzb2Z0LmNvbS9iYXNoL3RpcF9jb2xvcnNfYW5kX2Zvcm1hdHRpbmdcbiAgICAgIGNvbnN0IHByZWZpeCA9IGAke2JsdWVDb2xvcn0gICR7cmVzZXRDb2xvcn1gXG4gICAgICBwcm9jZXNzLnN0ZG91dC53cml0ZShwcmVmaXgpXG4gICAgICByZXR1cm4gUmVmbGVjdC5hcHBseSh0YXJnZXQsIHRoaXNBcmcsIGFyZ3VtZW50c0xpc3QpXG4gICAgfSxcbiAgfSlcbn1cbiJdfQ==

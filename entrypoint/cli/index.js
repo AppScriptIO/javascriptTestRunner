@@ -12,8 +12,10 @@ if (filesystem.existsSync(projectConfig.directory.distribution)) {
   // • Transpilation (babelJSCompiler)
   const { Compiler } = require('@dependency/javascriptTranspilation')
   let compiler = new Compiler()
-  compiler.requireHook()
+  compiler.requireHook({ restrictToTargetProject: false /* Transpile tests of the target project */ })
   // compiler.outputTranspilation()
-  // process.on('exit', () => console.log(compiler.loadedFiles.map(value => value.filename)))
+  // process.on('exit', () => {
+  //   console.log(compiler.loadedFiles.map(value => value.filename))
+  // })
   module.exports = require(path.join(projectConfig.directory.source, projectConfig.entrypoint.cli))
 }

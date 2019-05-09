@@ -3,6 +3,9 @@
  */
 import { runMocha } from '../mocha'
 import assert from 'assert'
+import { consoleLogOverwrite } from '../utility/consoleLogOverwrite.js'
+
+consoleLogOverwrite()
 
 assert(process.argv[2], '• Must pass command arguments to run Mocha cli script.')
 let args = JSON.parse(process.argv[2])

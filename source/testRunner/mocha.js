@@ -1,4 +1,5 @@
 import Mocha from 'mocha' // Mocha -Programmatic rest runner https://github.com/mochajs/mocha/wiki/Using-mocha-programmatically
+import { Compiler } from '@dependency/javascriptTranspilation'
 
 export function runMocha({
   mocha = new Mocha({
@@ -8,11 +9,17 @@ export function runMocha({
   testTarget,
   jsFileArray,
   shouldInvalidateRequireModule = false, // invalidation isn't needed anymore as this module is run in a subprocess
+  shouldCompileTest = true,
 } = {}) {
   if (shouldInvalidateRequireModule) {
     const { invalidateRequiredModule, invalidateRequiredModuleEventHandler } = './utility/invalidateRequiredModule.js'
     invalidateRequiredModuleEventHandler({ mochaInstance: mocha })
     invalidateRequiredModule({ fileArray: jsFileArray })
+  }
+
+  if (shouldCompileTest) {
+    let compiler = new Compiler()
+    compiler.requireHook({ restrictToTargetProject: false /* Transpile tests of the target project */ })
   }
 
   // Add each .test.js file to the mocha instance

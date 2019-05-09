@@ -894,8 +894,8 @@
     typescript "^3.3.3333"
 
 "@dependency/javascriptTestRunner@https://github.com/AppScriptIO/javascriptTestRunner":
-  version "1.0.2"
-  resolved "https://github.com/AppScriptIO/javascriptTestRunner#f31beb2f89e91935ea29971e1e0378c081ca40bf"
+  version "1.0.3"
+  resolved "https://github.com/AppScriptIO/javascriptTestRunner#ff6767dd31b9d70d1bd78ff3cc2a33d3fb59b49a"
   dependencies:
     "@dependency/javascriptTranspilation" "https://github.com/AppScriptIO/javascriptTranspilation#semver:^1.x.x"
     "@dependency/nodejsLiveReload" "https://github.com/AppScriptIO/nodejsLiveReload#semver:^1.x.x"
@@ -907,8 +907,8 @@
     sinon "*"
 
 "@dependency/javascriptTranspilation@https://github.com/AppScriptIO/javascriptTranspilation#semver:^1.x.x":
-  version "1.1.6"
-  resolved "https://github.com/AppScriptIO/javascriptTranspilation#e1788247f9331df07a8128a243f7c74e0e0b6d4c"
+  version "1.1.8"
+  resolved "https://github.com/AppScriptIO/javascriptTranspilation#c5f4335eab1b6f3e57903afd6273ba9eebed7817"
   dependencies:
     "@babel/babel-plugin-functionSentProxyImplementation" "https://github.com/AppScriptIO/babel-plugin-functionSentProxyImplementation#semver:^1.x.x"
     "@babel/core" "*"
@@ -996,8 +996,8 @@
     "@dependency/listDirectoryContent" "https://github.com/AppScriptIO/listDirectoryContent#semver:^1.x.x"
 
 "@dependency/scriptManager@https://github.com/AppScriptIO/scriptManager#semver:^1.x.x":
-  version "1.0.5"
-  resolved "https://github.com/AppScriptIO/scriptManager#35bdd37e5426a4a75da112a3b03e47ffaff85e37"
+  version "1.0.6"
+  resolved "https://github.com/AppScriptIO/scriptManager#f019085f7acf8e73258c769988f0e0f9fd5fa5c8"
   dependencies:
     "@dependency/JSModuleTypeCheck" "https://github.com/AppScriptIO/JSModuleTypeCheck#semver:^1.x.x"
     "@dependency/addModuleResolutionPath" "https://github.com/AppScriptIO/addModuleResolutionPath#semver:^1.x.x"

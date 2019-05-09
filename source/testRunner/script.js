@@ -36,7 +36,7 @@ export async function runTest({
   let testFileArray
   if (testFileExtension.some(extension => testPath.endsWith(extension))) {
     // file path
-    console.log(testPath)
+    console.log(`• Test path: testPath`)
     testFileArray = [testPath]
   } else {
     // directory path

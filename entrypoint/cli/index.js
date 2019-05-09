@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Shebang (#!) above allows for invoking this file directly on Unix-like platforms.
 // InvokeCLI
-const projectConfig = require('../../configuration/project.config.js'),
+const projectConfig = require('../../configuration'),
   path = require('path'),
   filesystem = require('fs')
 
@@ -14,5 +14,6 @@ if (filesystem.existsSync(projectConfig.directory.distribution)) {
   let compiler = new Compiler()
   compiler.requireHook()
   // compiler.outputTranspilation()
+  // process.on('exit', () => console.log(compiler.loadedFiles.map(value => value.filename)))
   module.exports = require(path.join(projectConfig.directory.source, projectConfig.entrypoint.cli))
 }

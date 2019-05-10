@@ -12,6 +12,7 @@ export function runMocha({
   shouldInvalidateRequireModule = false, // invalidation isn't needed anymore as this module is run in a subprocess
   shouldCompileTest = true,
   shouldDebugger,
+  targetProject,
 } = {}) {
   if (shouldInvalidateRequireModule) {
     const { invalidateRequiredModule, invalidateRequiredModuleEventHandler } = './utility/invalidateRequiredModule.js'
@@ -20,8 +21,13 @@ export function runMocha({
   }
 
   if (shouldCompileTest) {
-    let compiler = new Compiler()
+    let compiler = new Compiler({ babelTransformConfig: targetProject.configuration.configuration.transpilation.babelConfig /** Search for configuration files from target project */ })
     compiler.requireHook({ restrictToTargetProject: false /* Transpile tests of the target project */ })
+    // process.on('exit', () => {
+    //   console.log('TestRunner CLI')
+    //   console.log(compiler.loadedFiles.map(value => value.filename))
+    //   console.log(compiler.babelRegisterConfig.ignore)
+    // })
   }
 
   // Add each .test.js file to the mocha instance

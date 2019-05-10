@@ -54,7 +54,7 @@ export async function runTest({
   // add node_modules js files
   let watchFileArray = Array.prototype.concat.apply([], jsFileArrayOfArray)
 
-  let stringifyArgs = JSON.stringify([{ testTarget: testFileArray, jsFileArray: jsFileArrayOfArray, shouldCompileTest, shouldDebugger }]) // parametrs for mocha module.
+  let stringifyArgs = JSON.stringify([{ testTarget: testFileArray, jsFileArray: jsFileArrayOfArray, shouldCompileTest, shouldDebugger, targetProject }]) // parametrs for mocha module.
   let subprocess // subprocess reference to control termination.
   function runMochaInSubprocess() {
     // running in subprocess prevents conflicts between tests and allows to control the test and terminate it when needed.

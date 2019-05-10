@@ -894,8 +894,8 @@
     typescript "^3.3.3333"
 
 "@dependency/javascriptTestRunner@https://github.com/AppScriptIO/javascriptTestRunner#semver:^1.x.x":
-  version "1.0.6"
-  resolved "https://github.com/AppScriptIO/javascriptTestRunner#d7e2b122a1ccff83725703b5f6261fe907713b92"
+  version "1.0.8"
+  resolved "https://github.com/AppScriptIO/javascriptTestRunner#6db8b5cd80e65330e85cc9b5af5077d78fbc9782"
   dependencies:
     "@dependency/javascriptTranspilation" "https://github.com/AppScriptIO/javascriptTranspilation#semver:^1.x.x"
     "@dependency/nodejsLiveReload" "https://github.com/AppScriptIO/nodejsLiveReload#semver:^1.x.x"

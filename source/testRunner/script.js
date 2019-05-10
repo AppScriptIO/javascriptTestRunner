@@ -12,6 +12,7 @@ export async function runTest({
   jsFileExtension = ['.js', '.ts'],
   testFileExtension = ['.test.js'],
   shouldCompileTest,
+  shouldDebugger = true,
 } = {}) {
   console.log(`\x1b[33m\x1b[1m\x1b[7m\x1b[36m%s\x1b[0m \x1b[2m\x1b[3m%s\x1b[0m`, `Container:`, `NodeJS App`)
 
@@ -51,7 +52,7 @@ export async function runTest({
   // add node_modules js files
   let watchFileArray = Array.prototype.concat.apply([], jsFileArrayOfArray)
 
-  let stringifyArgs = JSON.stringify([{ testTarget: testFileArray, jsFileArray: jsFileArrayOfArray, shouldCompileTest }]) // parametrs for mocha module.
+  let stringifyArgs = JSON.stringify([{ testTarget: testFileArray, jsFileArray: jsFileArrayOfArray, shouldCompileTest, shouldDebugger }]) // parametrs for mocha module.
   let subprocess // subprocess reference to control termination.
   function runMochaInSubprocess() {
     // running in subprocess prevents conflicts between tests and allows to control the test and terminate it when needed.

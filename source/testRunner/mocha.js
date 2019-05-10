@@ -1,5 +1,6 @@
 import Mocha from 'mocha' // Mocha -Programmatic rest runner https://github.com/mochajs/mocha/wiki/Using-mocha-programmatically
 import { Compiler } from '@dependency/javascriptTranspilation'
+import { subprocessInspector } from '../script.js'
 
 export function runMocha({
   mocha = new Mocha({
@@ -10,6 +11,7 @@ export function runMocha({
   jsFileArray,
   shouldInvalidateRequireModule = false, // invalidation isn't needed anymore as this module is run in a subprocess
   shouldCompileTest = true,
+  shouldDebugger,
 } = {}) {
   if (shouldInvalidateRequireModule) {
     const { invalidateRequiredModule, invalidateRequiredModuleEventHandler } = './utility/invalidateRequiredModule.js'
@@ -35,6 +37,7 @@ export function runMocha({
 
   // Run tests.
   try {
+    if (shouldDebugger) subprocessInspector()
     mocha.run(error => {
       // exit with non-zero status if there were failures
       if (error) {

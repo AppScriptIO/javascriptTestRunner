@@ -1,6 +1,6 @@
 import Mocha from 'mocha' // Mocha -Programmatic rest runner https://github.com/mochajs/mocha/wiki/Using-mocha-programmatically
 import { Compiler } from '@dependency/javascriptTranspilation'
-import { subprocessInspector } from '../script.js'
+import { subprocessInspector } from './script.js'
 
 export function runMocha({
   mocha = new Mocha({

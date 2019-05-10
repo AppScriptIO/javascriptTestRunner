@@ -12,7 +12,7 @@ export async function runTest({
   jsFileExtension = ['.js', '.ts'],
   testFileExtension = ['.test.js'],
   shouldCompileTest,
-  shouldDebugger = true,
+  shouldDebugger = false, // run ispector during runtime.
 } = {}) {
   console.log(`\x1b[33m\x1b[1m\x1b[7m\x1b[36m%s\x1b[0m \x1b[2m\x1b[3m%s\x1b[0m`, `Container:`, `NodeJS App`)
 
@@ -38,7 +38,7 @@ export async function runTest({
   let testFileArray
   if (testFileExtension.some(extension => testPath.endsWith(extension))) {
     // file path
-    console.log(`• Test path: testPath`)
+    console.log(`• Test path: ${testPath}`)
     testFileArray = [testPath]
   } else {
     // directory path
@@ -48,7 +48,9 @@ export async function runTest({
   let jsFileArrayOfArray = jsPathArray.map(jsPath => {
     return listFileWithExtension({ directory: jsPath, extension: jsFileExtension })
   })
-  //TODO: Must add excluding directory option. e.g. './distribution'.
+
+  //TODO: Must add excluding directory option. e.g. './distribution'. to prevent duplicate rerunning.
+
   // add node_modules js files
   let watchFileArray = Array.prototype.concat.apply([], jsFileArrayOfArray)
 

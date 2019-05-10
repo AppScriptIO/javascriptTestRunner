@@ -1,6 +1,6 @@
 {
   "name": "@dependency/javascriptTestRunner",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "main": "./entrypoint/programmaticAPI",
   "description": "Mocha test runner for unit tests and integration tests.",
   "bin": {

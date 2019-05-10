@@ -894,8 +894,8 @@
     typescript "^3.3.3333"
 
 "@dependency/javascriptTestRunner@https://github.com/AppScriptIO/javascriptTestRunner#semver:^1.x.x":
-  version "1.0.8"
-  resolved "https://github.com/AppScriptIO/javascriptTestRunner#6db8b5cd80e65330e85cc9b5af5077d78fbc9782"
+  version "1.0.9"
+  resolved "https://github.com/AppScriptIO/javascriptTestRunner#6f879a485bf57e4842b3c1f6bc8638e1a7650acb"
   dependencies:
     "@dependency/javascriptTranspilation" "https://github.com/AppScriptIO/javascriptTranspilation#semver:^1.x.x"
     "@dependency/nodejsLiveReload" "https://github.com/AppScriptIO/nodejsLiveReload#semver:^1.x.x"
@@ -907,8 +907,8 @@
     sinon "*"
 
 "@dependency/javascriptTranspilation@https://github.com/AppScriptIO/javascriptTranspilation#semver:^1.x.x":
-  version "1.1.8"
-  resolved "https://github.com/AppScriptIO/javascriptTranspilation#c5f4335eab1b6f3e57903afd6273ba9eebed7817"
+  version "1.1.9"
+  resolved "https://github.com/AppScriptIO/javascriptTranspilation#992d9a50cb89dfca301ebbde303c0b6b415760e1"
   dependencies:
     "@babel/babel-plugin-functionSentProxyImplementation" "https://github.com/AppScriptIO/babel-plugin-functionSentProxyImplementation#semver:^1.x.x"
     "@babel/core" "*"

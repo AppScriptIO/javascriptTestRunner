@@ -1,12 +1,13 @@
-// Append indentation for all logs in this subprocess.
-export function consoleLogOverwrite() {
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.consoleLogOverwrite = consoleLogOverwrite;
+function consoleLogOverwrite() {
   console.log = new Proxy(console.log, {
     apply(target, thisArg, argumentsList) {
       const color = [`\u001b[44m`, '\u001B[42m', '\u001B[35m', '\u001B[36m', '\u001B[37m', '\u001B[41m'],
-        resetColor = `\u001b[0m` // https://stackoverflow.com/questions/5762491/how-to-print-color-in-console-using-system-out-println/27788295
-      const prefix = `${Math.floor(Math.random() * color.length)}  ${resetColor}`
-      process.stdout.write(prefix)
-      return Reflect.apply(target, thisArg, argumentsList)
-    },
-  })
+      resetColor = `\u001b[0m`;
+      const prefix = `${Math.floor(Math.random() * color.length)}  ${resetColor}`;
+      process.stdout.write(prefix);
+      return Reflect.apply(target, thisArg, argumentsList);
+    } });
+
 }
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uL3NvdXJjZS90ZXN0UnVubmVyL3V0aWxpdHkvY29uc29sZUxvZ092ZXJ3cml0ZS5qcyJdLCJuYW1lcyI6WyJjb25zb2xlTG9nT3ZlcndyaXRlIiwiY29uc29sZSIsImxvZyIsIlByb3h5IiwiYXBwbHkiLCJ0YXJnZXQiLCJ0aGlzQXJnIiwiYXJndW1lbnRzTGlzdCIsImNvbG9yIiwicmVzZXRDb2xvciIsInByZWZpeCIsIk1hdGgiLCJmbG9vciIsInJhbmRvbSIsImxlbmd0aCIsInByb2Nlc3MiLCJzdGRvdXQiLCJ3cml0ZSIsIlJlZmxlY3QiXSwibWFwcGluZ3MiOiI7QUFDTyxTQUFTQSxtQkFBVCxHQUErQjtBQUNwQ0MsRUFBQUEsT0FBTyxDQUFDQyxHQUFSLEdBQWMsSUFBSUMsS0FBSixDQUFVRixPQUFPLENBQUNDLEdBQWxCLEVBQXVCO0FBQ25DRSxJQUFBQSxLQUFLLENBQUNDLE1BQUQsRUFBU0MsT0FBVCxFQUFrQkMsYUFBbEIsRUFBaUM7QUFDcEMsWUFBTUMsS0FBSyxHQUFHLENBQUUsWUFBRixFQUFlLFlBQWYsRUFBNkIsWUFBN0IsRUFBMkMsWUFBM0MsRUFBeUQsWUFBekQsRUFBdUUsWUFBdkUsQ0FBZDtBQUNFQyxNQUFBQSxVQUFVLEdBQUksV0FEaEI7QUFFQSxZQUFNQyxNQUFNLEdBQUksR0FBRUMsSUFBSSxDQUFDQyxLQUFMLENBQVdELElBQUksQ0FBQ0UsTUFBTCxLQUFnQkwsS0FBSyxDQUFDTSxNQUFqQyxDQUF5QyxLQUFJTCxVQUFXLEVBQTFFO0FBQ0FNLE1BQUFBLE9BQU8sQ0FBQ0MsTUFBUixDQUFlQyxLQUFmLENBQXFCUCxNQUFyQjtBQUNBLGFBQU9RLE9BQU8sQ0FBQ2QsS0FBUixDQUFjQyxNQUFkLEVBQXNCQyxPQUF0QixFQUErQkMsYUFBL0IsQ0FBUDtBQUNELEtBUGtDLEVBQXZCLENBQWQ7O0FBU0QiLCJzb3VyY2VzQ29udGVudCI6WyIvLyBBcHBlbmQgaW5kZW50YXRpb24gZm9yIGFsbCBsb2dzIGluIHRoaXMgc3VicHJvY2Vzcy5cbmV4cG9ydCBmdW5jdGlvbiBjb25zb2xlTG9nT3ZlcndyaXRlKCkge1xuICBjb25zb2xlLmxvZyA9IG5ldyBQcm94eShjb25zb2xlLmxvZywge1xuICAgIGFwcGx5KHRhcmdldCwgdGhpc0FyZywgYXJndW1lbnRzTGlzdCkge1xuICAgICAgY29uc3QgY29sb3IgPSBbYFxcdTAwMWJbNDRtYCwgJ1xcdTAwMUJbNDJtJywgJ1xcdTAwMUJbMzVtJywgJ1xcdTAwMUJbMzZtJywgJ1xcdTAwMUJbMzdtJywgJ1xcdTAwMUJbNDFtJ10sXG4gICAgICAgIHJlc2V0Q29sb3IgPSBgXFx1MDAxYlswbWAgLy8gaHR0cHM6Ly9zdGFja292ZXJmbG93LmNvbS9xdWVzdGlvbnMvNTc2MjQ5MS9ob3ctdG8tcHJpbnQtY29sb3ItaW4tY29uc29sZS11c2luZy1zeXN0ZW0tb3V0LXByaW50bG4vMjc3ODgyOTVcbiAgICAgIGNvbnN0IHByZWZpeCA9IGAke01hdGguZmxvb3IoTWF0aC5yYW5kb20oKSAqIGNvbG9yLmxlbmd0aCl9ICAke3Jlc2V0Q29sb3J9YFxuICAgICAgcHJvY2Vzcy5zdGRvdXQud3JpdGUocHJlZml4KVxuICAgICAgcmV0dXJuIFJlZmxlY3QuYXBwbHkodGFyZ2V0LCB0aGlzQXJnLCBhcmd1bWVudHNMaXN0KVxuICAgIH0sXG4gIH0pXG59XG4iXX0=

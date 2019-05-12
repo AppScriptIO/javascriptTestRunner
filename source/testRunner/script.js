@@ -1,6 +1,6 @@
 import path from 'path'
 import assert from 'assert'
-import { listFileRecursively, listFileWithExtension } from './utility/listFileRecursively.js'
+import { listFileRecursively, listFileWithExtension } from '../utility/listFileRecursively.js'
 const mochaModule = path.join(__dirname, '../../entrypoint/cli/index.js') // mocha cli for running using nodejs spawn child process interface (accepting only module paths)
 import { watchFile } from '@dependency/nodejsLiveReload'
 import { promises as filesystem } from 'fs'
@@ -11,6 +11,7 @@ export async function runTest({
   testPath, // relative or absolute
   jsFileExtension = ['.js', '.ts'],
   testFileExtension = ['.test.js'],
+  ignoreRegex = [],
   shouldCompileTest,
   shouldDebugger = false, // run ispector during runtime.
 } = {}) {
@@ -26,6 +27,10 @@ export async function runTest({
 
   assert(targetProject, `targetProject must be passed.`)
   let targetProjectRootPath = targetProject.configuration.rootPath
+
+  // ignore temporary transpilation files to prevent watch event emission loop when inspector debugging and auto attach for debugger.
+  ignoreRegex.push(new RegExp(`${path.join(targetProjectRootPath, 'temporary')}`))
+  ignoreRegex.push(new RegExp(`${path.join(targetProjectRootPath, 'distribution')}`))
 
   if (!path.isAbsolute(testPath)) {
     testPath = path.join(targetProjectRootPath, testPath)
@@ -45,11 +50,7 @@ export async function runTest({
     testFileArray = listFileWithExtension({ directory: testPath, extension: testFileExtension })
   }
 
-  let jsFileArrayOfArray = jsPathArray.map(jsPath => {
-    return listFileWithExtension({ directory: jsPath, extension: jsFileExtension })
-  })
-
-  //TODO: Must add excluding directory option. e.g. './distribution'. to prevent duplicate rerunning.
+  let jsFileArrayOfArray = jsPathArray.map(jsPath => listFileWithExtension({ directory: jsPath, extension: jsFileExtension, ignoreRegex }))
 
   // add node_modules js files
   let watchFileArray = Array.prototype.concat.apply([], jsFileArrayOfArray)

@@ -25,12 +25,13 @@ function listFileRecursively({ directory, ignoreRegex = [new RegExp(/node_module
 }
 
 // interface for listFieRecusively function that returns an array of file paths, and filters files with the specified extension.
-function listFileWithExtension({ directory, extension /*Array*/ }) {
+function listFileWithExtension({ directory, extension = [], ignoreRegex = [] }) {
   if (!Array.isArray(extension)) extension = [extension] // support array or string
   return listFileRecursively({ directory })
     .filter(file => {
-      // Only keep the files with the extension
-      return extension.some(suffix => file.name.substr(-suffix.length) === suffix)
+      let c1 = extension.some(suffix => file.name.substr(-suffix.length) === suffix) // Only keep the files with the extension
+      let c2 = ignoreRegex.some(regex => file.path.match(regex)) // filter files matching ignore regex
+      return c1 && !c2
     })
     .reduce((accumulator, currentValue) => {
       accumulator.push(currentValue.path)

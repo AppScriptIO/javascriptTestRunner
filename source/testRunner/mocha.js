@@ -15,7 +15,7 @@ export function runMocha({
   targetProject,
 } = {}) {
   if (shouldInvalidateRequireModule) {
-    const { invalidateRequiredModule, invalidateRequiredModuleEventHandler } = './utility/invalidateRequiredModule.js'
+    const { invalidateRequiredModule, invalidateRequiredModuleEventHandler } = '../utility/invalidateRequiredModule.js'
     invalidateRequiredModuleEventHandler({ mochaInstance: mocha })
     invalidateRequiredModule({ fileArray: jsFileArray })
   }

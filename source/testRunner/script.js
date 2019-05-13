@@ -8,67 +8,71 @@ import childProcess from 'child_process'
 
 export async function runTest({
   targetProject, // `Project class` instance created by `scriptManager` from the configuration file of the target project.
-  testPath, // relative or absolute
+  testPath = [], // relative or absolute
+  jsPath = [],
   jsFileExtension = ['.js', '.ts'],
   testFileExtension = ['.test.js'],
   ignoreRegex = [],
   shouldCompileTest,
   shouldDebugger = false, // run ispector during runtime.
 } = {}) {
-  console.log(`\x1b[33m\x1b[1m\x1b[7m\x1b[36m%s\x1b[0m \x1b[2m\x1b[3m%s\x1b[0m`, `Container:`, `NodeJS App`)
-
-  // Setup environment
-  await require('@dependency/addModuleResolutionPath').addModuleResolutionPath({ pathArray: [path.dirname(require.main.filename)] })
-
   process.on('SIGINT', () => {
     console.log('Caught interrupt signal - test container level')
     process.exit(0)
   })
+  console.log(`\x1b[33m\x1b[1m\x1b[7m\x1b[36m%s\x1b[0m \x1b[2m\x1b[3m%s\x1b[0m`, `Container:`, `NodeJS App`)
+  // Setup environment
+  await require('@dependency/addModuleResolutionPath').addModuleResolutionPath({ pathArray: [path.dirname(require.main.filename)] })
 
   assert(targetProject, `targetProject must be passed.`)
   let targetProjectRootPath = targetProject.configuration.rootPath
 
   // ignore temporary transpilation files to prevent watch event emission loop when inspector debugging and auto attach for debugger.
-  ignoreRegex.push(new RegExp(`${path.join(targetProjectRootPath, 'temporary')}`))
-  ignoreRegex.push(new RegExp(`${path.join(targetProjectRootPath, 'distribution')}`))
-
-  if (!path.isAbsolute(testPath)) {
-    testPath = path.join(targetProjectRootPath, testPath)
+  if (ignoreRegex.length != 0) {
+    ignoreRegex.push(new RegExp(`${path.join(targetProjectRootPath, 'temporary')}`))
+    ignoreRegex.push(new RegExp(`${path.join(targetProjectRootPath, 'distribution')}`))
   }
-  let jsPathArray = [targetProjectRootPath]
-  if (await filesystem.lstat(testPath).then(statObject => statObject.isDirectory())) jsPathArray.push(testPath)
 
   /* List all files in a directory recursively */
-  console.log(`• Searching for ${JSON.stringify(testFileExtension)} extension files, in path ${testPath}.`)
-  let testFileArray
-  if (testFileExtension.some(extension => testPath.endsWith(extension))) {
-    // file path
-    console.log(`• Test path: ${testPath}`)
-    testFileArray = [testPath]
-  } else {
-    // directory path
-    testFileArray = listFileWithExtension({ directory: testPath, extension: testFileExtension })
-  }
+  console.log(`• Searching for ${JSON.stringify(testFileExtension)} extension files, in path ${JSON.stringify(testPath)}.`)
+  let testFileArray = []
+  testPath.forEach(p => {
+    p = !path.isAbsolute(p) ? path.join(targetProjectRootPath, p) : p // resolve to absolute path
+    console.log(`• Test path: ${p}`)
+    if (testFileExtension.some(extension => p.endsWith(extension))) {
+      // file path
+      testFileArray.push(p)
+    } else {
+      // directory path
+      let fileList = listFileWithExtension({ directory: p, extension: testFileExtension })
+      testFileArray = Array.prototype.concat.apply(testFileArray, fileList)
+    }
+  })
 
-  let jsFileArrayOfArray = jsPathArray.map(jsPath => listFileWithExtension({ directory: jsPath, extension: jsFileExtension, ignoreRegex }))
+  // await filesystem.lstat(filePath).then(statObject => statObject.isDirectory()) // check if path is a directory
 
-  // add node_modules js files
-  let watchFileArray = Array.prototype.concat.apply([], jsFileArrayOfArray)
+  jsPath.push(targetProjectRootPath)
+  let jsFileArray = jsPath.map(pathArray => listFileWithExtension({ directory: pathArray, extension: jsFileExtension, ignoreRegex }))
+  let jsFileArrayOfArray = Array.prototype.concat.apply(jsFileArray, testFileArray)
 
-  let stringifyArgs = JSON.stringify([{ testTarget: testFileArray, jsFileArray: jsFileArrayOfArray, shouldCompileTest, shouldDebugger, targetProject }]) // parametrs for mocha module.
   let subprocess // subprocess reference to control termination.
   function runMochaInSubprocess() {
+    let stringifyArgs = JSON.stringify([{ testTarget: testFileArray, jsFileArray: jsFileArrayOfArray, shouldCompileTest, shouldDebugger, targetProject }]) // parametrs for mocha module.
     // running in subprocess prevents conflicts between tests and allows to control the test and terminate it when needed.
     subprocess = childProcess.fork(mochaModule, [stringifyArgs], { stdio: [0, 1, 2, 'ipc'] })
     // subprocess.on('exit', () => console.log(`Test subprocess ${subprocess.pid} exited.`));
   }
-  let triggerCallback = () => {
-    // to be run after file notification
-    subprocess && subprocess.kill('SIGINT')
-    runMochaInSubprocess()
-  }
 
-  await watchFile({ triggerCallback, fileArray: Array.prototype.concat.apply([], [watchFileArray, testFileArray]), ignoreNodeModules: true, logMessage: false })
+  await watchFile({
+    // to be run after file notification
+    triggerCallback: () => {
+      subprocess && subprocess.kill('SIGINT')
+      runMochaInSubprocess()
+    },
+    fileArray: Array.prototype.concat.apply([testFileArray], jsFileArrayOfArray), // add node_modules js files
+    ignoreNodeModules: true,
+    logMessage: false,
+  })
 
   runMochaInSubprocess() // initial trigger action, to run test immediately
 }

@@ -6,6 +6,9 @@ _This prevents the need to manually reload Chrome inspector window or focus the 
 - In chrome://inspect/#devices open `Open dedicated DevTools for Node` 
 - run tests from terminal. 
 
+# Usage: 
+node --no-lazy ./node_modules/.bin/scriptManager test "({ testPath: './distribution/test', shouldDebugger: true, shouldCompileTest: false })"
+
 ___ 
 [TODO list](/documentation/TODO.md)
 

@@ -1,96 +1,97 @@
-import path from 'path'
-import assert from 'assert'
-import { listFileRecursively, listFileWithExtension } from '../utility/listFileRecursively.js'
-const mochaModule = path.join(__dirname, '../../entrypoint/cli/index.js') // mocha cli for running using nodejs spawn child process interface (accepting only module paths)
-import { watchFile } from '@dependency/nodejsLiveReload'
-import { promises as filesystem } from 'fs'
-import childProcess from 'child_process'
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.runTest = runTest;exports.subprocessInspector = subprocessInspector;var _path = _interopRequireDefault(require("path"));
+var _assert = _interopRequireDefault(require("assert"));
+var _listFileRecursively = require("../utility/listFileRecursively.js");
 
-export async function runTest({
-  targetProject, // `Project class` instance created by `scriptManager` from the configuration file of the target project.
-  testPath = [], // relative or absolute
+var _nodejsLiveReload = require("@dependency/nodejsLiveReload");
+
+var _child_process = _interopRequireDefault(require("child_process"));const mochaModule = _path.default.join(__dirname, '../../entrypoint/cli/index.js');
+
+async function runTest({
+  targetProject,
+  testPath = [],
   jsPath = [],
   jsFileExtension = ['.js', '.ts'],
   testFileExtension = ['.test.js'],
   ignoreRegex = [],
   shouldCompileTest,
-  shouldDebugger = false, // run ispector during runtime.
-} = {}) {
+  shouldDebugger = false } =
+{}) {
   process.on('SIGINT', () => {
-    console.log('Caught interrupt signal - test container level')
-    process.exit(0)
-  })
-  console.log(`\x1b[33m\x1b[1m\x1b[7m\x1b[36m%s\x1b[0m \x1b[2m\x1b[3m%s\x1b[0m`, `Container:`, `NodeJS App`)
-  // Setup environment
-  await require('@dependency/addModuleResolutionPath').addModuleResolutionPath({ pathArray: [path.dirname(require.main.filename)] })
+    console.log('Caught interrupt signal - test container level');
+    process.exit(0);
+  });
+  console.log(`\x1b[33m\x1b[1m\x1b[7m\x1b[36m%s\x1b[0m \x1b[2m\x1b[3m%s\x1b[0m`, `Container:`, `NodeJS App`);
 
-  assert(targetProject, `targetProject must be passed.`)
-  let targetProjectRootPath = targetProject.configuration.rootPath
+  await require('@dependency/addModuleResolutionPath').addModuleResolutionPath({ pathArray: [_path.default.dirname(require.main.filename)] });
 
-  // ignore temporary transpilation files to prevent watch event emission loop when inspector debugging and auto attach for debugger.
+  (0, _assert.default)(targetProject, `targetProject must be passed.`);
+  let targetProjectRootPath = targetProject.configuration.rootPath;
+
+
   if (ignoreRegex.length != 0) {
-    ignoreRegex.push(new RegExp(`${path.join(targetProjectRootPath, 'temporary')}`))
-    ignoreRegex.push(new RegExp(`${path.join(targetProjectRootPath, 'distribution')}`))
+    ignoreRegex.push(new RegExp(`${_path.default.join(targetProjectRootPath, 'temporary')}`));
+    ignoreRegex.push(new RegExp(`${_path.default.join(targetProjectRootPath, 'distribution')}`));
   }
 
-  /* List all files in a directory recursively */
-  console.log(`• Searching for ${JSON.stringify(testFileExtension)} extension files, in path ${JSON.stringify(testPath)}.`)
-  let testFileArray
+
+  console.log(`• Searching for ${JSON.stringify(testFileExtension)} extension files, in path ${JSON.stringify(testPath)}.`);
+  let testFileArray;
   testPath.forEach(p => {
-    p = !path.isAbsolute(p) ? path.join(targetProjectRootPath, p) : p // resolve to absolute path
-    console.log(`• Test path: ${p}`)
+    p = !_path.default.isAbsolute(p) ? _path.default.join(targetProjectRootPath, p) : p;
+    console.log(`• Test path: ${p}`);
     if (testFileExtension.some(extension => p.endsWith(extension))) {
-      // file path
-      testFileArray.push(p)
+
+      testFileArray.push(p);
     } else {
-      // directory path
-      let fileList = listFileWithExtension({ directory: p, extension: testFileExtension })
-      Array.prototype.concat.apply(testFileArray, fileList)
+
+      let fileList = (0, _listFileRecursively.listFileWithExtension)({ directory: p, extension: testFileExtension });
+      Array.prototype.concat.apply(testFileArray, fileList);
     }
-  })
+  });
 
-  // await filesystem.lstat(filePath).then(statObject => statObject.isDirectory()) // check if path is a directory
 
-  jsPath.push(targetProjectRootPath)
-  let jsFileArray = jsPath.map(pathArray => listFileWithExtension({ directory: pathArray, extension: jsFileExtension, ignoreRegex }))
-  let jsFileArrayOfArray = Array.prototype.concat.apply(jsFileArray, testFileArray)
 
-  let subprocess // subprocess reference to control termination.
+  jsPath.push(targetProjectRootPath);
+  let jsFileArray = jsPath.map(pathArray => (0, _listFileRecursively.listFileWithExtension)({ directory: pathArray, extension: jsFileExtension, ignoreRegex }));
+  let jsFileArrayOfArray = Array.prototype.concat.apply(jsFileArray, testFileArray);
+
+  let subprocess;
   function runMochaInSubprocess() {
-    let stringifyArgs = JSON.stringify([{ testTarget: testFileArray, jsFileArray: jsFileArrayOfArray, shouldCompileTest, shouldDebugger, targetProject }]) // parametrs for mocha module.
-    // running in subprocess prevents conflicts between tests and allows to control the test and terminate it when needed.
-    subprocess = childProcess.fork(mochaModule, [stringifyArgs], { stdio: [0, 1, 2, 'ipc'] })
-    // subprocess.on('exit', () => console.log(`Test subprocess ${subprocess.pid} exited.`));
+    let stringifyArgs = JSON.stringify([{ testTarget: testFileArray, jsFileArray: jsFileArrayOfArray, shouldCompileTest, shouldDebugger, targetProject }]);
+
+    subprocess = _child_process.default.fork(mochaModule, [stringifyArgs], { stdio: [0, 1, 2, 'ipc'] });
+
   }
 
-  await watchFile({
-    // to be run after file notification
+  await (0, _nodejsLiveReload.watchFile)({
+
     triggerCallback: () => {
-      subprocess && subprocess.kill('SIGINT')
-      runMochaInSubprocess()
+      subprocess && subprocess.kill('SIGINT');
+      runMochaInSubprocess();
     },
-    fileArray: Array.prototype.concat.apply([testFileArray], jsFileArrayOfArray), // add node_modules js files
+    fileArray: Array.prototype.concat.apply([testFileArray], jsFileArrayOfArray),
     ignoreNodeModules: true,
-    logMessage: false,
-  })
+    logMessage: false });
 
-  runMochaInSubprocess() // initial trigger action, to run test immediately
+
+  runMochaInSubprocess();
 }
 
-/**
- * Allows to use Nodejs inspector with the current way tests are run, where tests are run in subprocesses and no Nodejs flags are passed.
- * Currently its possible to use inspector programmatic API, but to allow livereload each test subprocess should be kept alive e.g. using `setTimeout` to allow for inspecting object values etc.
- * Usage:
- *  - execute this function in the top of a test.
- *  - insert `debugger` statement in the test files to break after refreshing process.
- *
- */
-export function subprocessInspector({ port = 9229, host = 'localhost', shouldbreak = true } = {}) {
-  const inspector = require('inspector')
-  inspector.open(port, host, shouldbreak)
-  // Keep Node alive to allow for inspecting objects.
+
+
+
+
+
+
+
+
+function subprocessInspector({ port = 9229, host = 'localhost', shouldbreak = true } = {}) {
+  const inspector = require('inspector');
+  inspector.open(port, host, shouldbreak);
+
   process.on('beforeExit', () => {
-    setTimeout(() => {}, 1000000000)
-  })
-  return inspector
+    setTimeout(() => {}, 1000000000);
+  });
+  return inspector;
 }
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uL3NvdXJjZS90ZXN0UnVubmVyL3NjcmlwdC5qcyJdLCJuYW1lcyI6WyJtb2NoYU1vZHVsZSIsInBhdGgiLCJqb2luIiwiX19kaXJuYW1lIiwicnVuVGVzdCIsInRhcmdldFByb2plY3QiLCJ0ZXN0UGF0aCIsImpzUGF0aCIsImpzRmlsZUV4dGVuc2lvbiIsInRlc3RGaWxlRXh0ZW5zaW9uIiwiaWdub3JlUmVnZXgiLCJzaG91bGRDb21waWxlVGVzdCIsInNob3VsZERlYnVnZ2VyIiwicHJvY2VzcyIsIm9uIiwiY29uc29sZSIsImxvZyIsImV4aXQiLCJyZXF1aXJlIiwiYWRkTW9kdWxlUmVzb2x1dGlvblBhdGgiLCJwYXRoQXJyYXkiLCJkaXJuYW1lIiwibWFpbiIsImZpbGVuYW1lIiwidGFyZ2V0UHJvamVjdFJvb3RQYXRoIiwiY29uZmlndXJhdGlvbiIsInJvb3RQYXRoIiwibGVuZ3RoIiwicHVzaCIsIlJlZ0V4cCIsIkpTT04iLCJzdHJpbmdpZnkiLCJ0ZXN0RmlsZUFycmF5IiwiZm9yRWFjaCIsInAiLCJpc0Fic29sdXRlIiwic29tZSIsImV4dGVuc2lvbiIsImVuZHNXaXRoIiwiZmlsZUxpc3QiLCJkaXJlY3RvcnkiLCJBcnJheSIsInByb3RvdHlwZSIsImNvbmNhdCIsImFwcGx5IiwianNGaWxlQXJyYXkiLCJtYXAiLCJqc0ZpbGVBcnJheU9mQXJyYXkiLCJzdWJwcm9jZXNzIiwicnVuTW9jaGFJblN1YnByb2Nlc3MiLCJzdHJpbmdpZnlBcmdzIiwidGVzdFRhcmdldCIsImNoaWxkUHJvY2VzcyIsImZvcmsiLCJzdGRpbyIsInRyaWdnZXJDYWxsYmFjayIsImtpbGwiLCJmaWxlQXJyYXkiLCJpZ25vcmVOb2RlTW9kdWxlcyIsImxvZ01lc3NhZ2UiLCJzdWJwcm9jZXNzSW5zcGVjdG9yIiwicG9ydCIsImhvc3QiLCJzaG91bGRicmVhayIsImluc3BlY3RvciIsIm9wZW4iLCJzZXRUaW1lb3V0Il0sIm1hcHBpbmdzIjoiNE9BQUE7QUFD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QUFBQSxVQUFVLEVBQUUsS0FSRSxFQUFWLENBQU47OztBQVdBVixFQUFBQSxvQkFBb0I7QUFDckI7Ozs7Ozs7Ozs7QUFVTSxTQUFTVyxtQkFBVCxDQUE2QixFQUFFQyxJQUFJLEdBQUcsSUFBVCxFQUFlQyxJQUFJLEdBQUcsV0FBdEIsRUFBbUNDLFdBQVcsR0FBRyxJQUFqRCxLQUEwRCxFQUF2RixFQUEyRjtBQUNoRyxRQUFNQyxTQUFTLEdBQUc5QyxPQUFPLENBQUMsV0FBRCxDQUF6QjtBQUNBOEMsRUFBQUEsU0FBUyxDQUFDQyxJQUFWLENBQWVKLElBQWYsRUFBcUJDLElBQXJCLEVBQTJCQyxXQUEzQjs7QUFFQWxELEVBQUFBLE9BQU8sQ0FBQ0MsRUFBUixDQUFXLFlBQVgsRUFBeUIsTUFBTTtBQUM3Qm9ELElBQUFBLFVBQVUsQ0FBQyxNQUFNLENBQUUsQ0FBVCxFQUFXLFVBQVgsQ0FBVjtBQUNELEdBRkQ7QUFHQSxTQUFPRixTQUFQO0FBQ0QiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgcGF0aCBmcm9tICdwYXRoJ1xuaW1wb3J0IGFzc2VydCBmcm9tICdhc3NlcnQnXG5pbXBvcnQgeyBsaXN0RmlsZVJlY3Vyc2l2ZWx5LCBsaXN0RmlsZVdpdGhFeHRlbnNpb24gfSBmcm9tICcuLi91dGlsaXR5L2xpc3RGaWxlUmVjdXJzaXZlbHkuanMnXG5jb25zdCBtb2NoYU1vZHVsZSA9IHBhdGguam9pbihfX2Rpcm5hbWUsICcuLi8uLi9lbnRyeXBvaW50L2NsaS9pbmRleC5qcycpIC8vIG1vY2hhIGNsaSBmb3IgcnVubmluZyB1c2luZyBub2RlanMgc3Bhd24gY2hpbGQgcHJvY2VzcyBpbnRlcmZhY2UgKGFjY2VwdGluZyBvbmx5IG1vZHVsZSBwYXRocylcbmltcG9ydCB7IHdhdGNoRmlsZSB9IGZyb20gJ0BkZXBlbmRlbmN5L25vZGVqc0xpdmVSZWxvYWQnXG5pbXBvcnQgeyBwcm9taXNlcyBhcyBmaWxlc3lzdGVtIH0gZnJvbSAnZnMnXG5pbXBvcnQgY2hpbGRQcm9jZXNzIGZyb20gJ2NoaWxkX3Byb2Nlc3MnXG5cbmV4cG9ydCBhc3luYyBmdW5jdGlvbiBydW5UZXN0KHtcbiAgdGFyZ2V0UHJvamVjdCwgLy8gYFByb2plY3QgY2xhc3NgIGluc3RhbmNlIGNyZWF0ZWQgYnkgYHNjcmlwdE1hbmFnZXJgIGZyb20gdGhlIGNvbmZpZ3VyYXRpb24gZmlsZSBvZiB0aGUgdGFyZ2V0IHByb2plY3QuXG4gIHRlc3RQYXRoID0gW10sIC8vIHJlbGF0aXZlIG9yIGFic29sdXRlXG4gIGpzUGF0aCA9IFtdLFxuICBqc0ZpbGVFeHRlbnNpb24gPSBbJy5qcycsICcudHMnXSxcbiAgdGVzdEZpbGVFeHRlbnNpb24gPSBbJy50ZXN0LmpzJ10sXG4gIGlnbm9yZVJlZ2V4ID0gW10sXG4gIHNob3VsZENvbXBpbGVUZXN0LFxuICBzaG91bGREZWJ1Z2dlciA9IGZhbHNlLCAvLyBydW4gaXNwZWN0b3IgZHVyaW5nIHJ1bnRpbWUuXG59ID0ge30pIHtcbiAgcHJvY2Vzcy5vbignU0lHSU5UJywgKCkgPT4ge1xuICAgIGNvbnNvbGUubG9nKCdDYXVnaHQgaW50ZXJydXB0IHNpZ25hbCAtIHRlc3QgY29udGFpbmVyIGxldmVsJylcbiAgICBwcm9jZXNzLmV4aXQoMClcbiAgfSlcbiAgY29uc29sZS5sb2coYFxceDFiWzMzbVxceDFiWzFtXFx4MWJbN21cXHgxYlszNm0lc1xceDFiWzBtIFxceDFiWzJtXFx4MWJbM20lc1xceDFiWzBtYCwgYENvbnRhaW5lcjpgLCBgTm9kZUpTIEFwcGApXG4gIC8vIFNldHVwIGVudmlyb25tZW50XG4gIGF3YWl0IHJlcXVpcmUoJ0BkZXBlbmRlbmN5L2FkZE1vZHVsZVJlc29sdXRpb25QYXRoJykuYWRkTW9kdWxlUmVzb2x1dGlvblBhdGgoeyBwYXRoQXJyYXk6IFtwYXRoLmRpcm5hbWUocmVxdWlyZS5tYWluLmZpbGVuYW1lKV0gfSlcblxuICBhc3NlcnQodGFyZ2V0UHJvamVjdCwgYHRhcmdldFByb2plY3QgbXVzdCBiZSBwYXNzZWQuYClcbiAgbGV0IHRhcmdldFByb2plY3RSb290UGF0aCA9IHRhcmdldFByb2plY3QuY29uZmlndXJhdGlvbi5yb290UGF0aFxuXG4gIC8vIGlnbm9yZSB0ZW1wb3JhcnkgdHJhbnNwaWxhdGlvbiBmaWxlcyB0byBwcmV2ZW50IHdhdGNoIGV2ZW50IGVtaXNzaW9uIGxvb3Agd2hlbiBpbnNwZWN0b3IgZGVidWdnaW5nIGFuZCBhdXRvIGF0dGFjaCBmb3IgZGVidWdnZXIuXG4gIGlmIChpZ25vcmVSZWdleC5sZW5ndGggIT0gMCkge1xuICAgIGlnbm9yZVJlZ2V4LnB1c2gobmV3IFJlZ0V4cChgJHtwYXRoLmpvaW4odGFyZ2V0UHJvamVjdFJvb3RQYXRoLCAndGVtcG9yYXJ5Jyl9YCkpXG4gICAgaWdub3JlUmVnZXgucHVzaChuZXcgUmVnRXhwKGAke3BhdGguam9pbih0YXJnZXRQcm9qZWN0Um9vdFBhdGgsICdkaXN0cmlidXRpb24nKX1gKSlcbiAgfVxuXG4gIC8qIExpc3QgYWxsIGZpbGVzIGluIGEgZGlyZWN0b3J5IHJlY3Vyc2l2ZWx5ICovXG4gIGNvbnNvbGUubG9nKGDigKIgU2VhcmNoaW5nIGZvciAke0pTT04uc3RyaW5naWZ5KHRlc3RGaWxlRXh0ZW5zaW9uKX0gZXh0ZW5zaW9uIGZpbGVzLCBpbiBwYXRoICR7SlNPTi5zdHJpbmdpZnkodGVzdFBhdGgpfS5gKVxuICBsZXQgdGVzdEZpbGVBcnJheVxuICB0ZXN0UGF0aC5mb3JFYWNoKHAgPT4ge1xuICAgIHAgPSAhcGF0aC5pc0Fic29sdXRlKHApID8gcGF0aC5qb2luKHRhcmdldFByb2plY3RSb290UGF0aCwgcCkgOiBwIC8vIHJlc29sdmUgdG8gYWJzb2x1dGUgcGF0aFxuICAgIGNvbnNvbGUubG9nKGDigKIgVGVzdCBwYXRoOiAke3B9YClcbiAgICBpZiAodGVzdEZpbGVFeHRlbnNpb24uc29tZShleHRlbnNpb24gPT4gcC5lbmRzV2l0aChleHRlbnNpb24pKSkge1xuICAgICAgLy8gZmlsZSBwYXRoXG4gICAgICB0ZXN0RmlsZUFycmF5LnB1c2gocClcbiAgICB9IGVsc2Uge1xuICAgICAgLy8gZGlyZWN0b3J5IHBhdGhcbiAgICAgIGxldCBmaWxlTGlzdCA9IGxpc3RGaWxlV2l0aEV4dGVuc2lvbih7IGRpcmVjdG9yeTogcCwgZXh0ZW5zaW9uOiB0ZXN0RmlsZUV4dGVuc2lvbiB9KVxuICAgICAgQXJyYXkucHJvdG90eXBlLmNvbmNhdC5hcHBseSh0ZXN0RmlsZUFycmF5LCBmaWxlTGlzdClcbiAgICB9XG4gIH0pXG5cbiAgLy8gYXdhaXQgZmlsZXN5c3RlbS5sc3RhdChmaWxlUGF0aCkudGhlbihzdGF0T2JqZWN0ID0+IHN0YXRPYmplY3QuaXNEaXJlY3RvcnkoKSkgLy8gY2hlY2sgaWYgcGF0aCBpcyBhIGRpcmVjdG9yeVxuXG4gIGpzUGF0aC5wdXNoKHRhcmdldFByb2plY3RSb290UGF0aClcbiAgbGV0IGpzRmlsZUFycmF5ID0ganNQYXRoLm1hcChwYXRoQXJyYXkgPT4gbGlzdEZpbGVXaXRoRXh0ZW5zaW9uKHsgZGlyZWN0b3J5OiBwYXRoQXJyYXksIGV4dGVuc2lvbjoganNGaWxlRXh0ZW5zaW9uLCBpZ25vcmVSZWdleCB9KSlcbiAgbGV0IGpzRmlsZUFycmF5T2ZBcnJheSA9IEFycmF5LnByb3RvdHlwZS5jb25jYXQuYXBwbHkoanNGaWxlQXJyYXksIHRlc3RGaWxlQXJyYXkpXG5cbiAgbGV0IHN1YnByb2Nlc3MgLy8gc3VicHJvY2VzcyByZWZlcmVuY2UgdG8gY29udHJvbCB0ZXJtaW5hdGlvbi5cbiAgZnVuY3Rpb24gcnVuTW9jaGFJblN1YnByb2Nlc3MoKSB7XG4gICAgbGV0IHN0cmluZ2lmeUFyZ3MgPSBKU09OLnN0cmluZ2lmeShbeyB0ZXN0VGFyZ2V0OiB0ZXN0RmlsZUFycmF5LCBqc0ZpbGVBcnJheToganNGaWxlQXJyYXlPZkFycmF5LCBzaG91bGRDb21waWxlVGVzdCwgc2hvdWxkRGVidWdnZXIsIHRhcmdldFByb2plY3QgfV0pIC8vIHBhcmFtZXRycyBmb3IgbW9jaGEgbW9kdWxlLlxuICAgIC8vIHJ1bm5pbmcgaW4gc3VicHJvY2VzcyBwcmV2ZW50cyBjb25mbGljdHMgYmV0d2VlbiB0ZXN0cyBhbmQgYWxsb3dzIHRvIGNvbnRyb2wgdGhlIHRlc3QgYW5kIHRlcm1pbmF0ZSBpdCB3aGVuIG5lZWRlZC5cbiAgICBzdWJwcm9jZXNzID0gY2hpbGRQcm9jZXNzLmZvcmsobW9jaGFNb2R1bGUsIFtzdHJpbmdpZnlBcmdzXSwgeyBzdGRpbzogWzAsIDEsIDIsICdpcGMnXSB9KVxuICAgIC8vIHN1YnByb2Nlc3Mub24oJ2V4aXQnLCAoKSA9PiBjb25zb2xlLmxvZyhgVGVzdCBzdWJwcm9jZXNzICR7c3VicHJvY2Vzcy5waWR9IGV4aXRlZC5gKSk7XG4gIH1cblxuICBhd2FpdCB3YXRjaEZpbGUoe1xuICAgIC8vIHRvIGJlIHJ1biBhZnRlciBmaWxlIG5vdGlmaWNhdGlvblxuICAgIHRyaWdnZXJDYWxsYmFjazogKCkgPT4ge1xuICAgICAgc3VicHJvY2VzcyAmJiBzdWJwcm9jZXNzLmtpbGwoJ1NJR0lOVCcpXG4gICAgICBydW5Nb2NoYUluU3VicHJvY2VzcygpXG4gICAgfSxcbiAgICBmaWxlQXJyYXk6IEFycmF5LnByb3RvdHlwZS5jb25jYXQuYXBwbHkoW3Rlc3RGaWxlQXJyYXldLCBqc0ZpbGVBcnJheU9mQXJyYXkpLCAvLyBhZGQgbm9kZV9tb2R1bGVzIGpzIGZpbGVzXG4gICAgaWdub3JlTm9kZU1vZHVsZXM6IHRydWUsXG4gICAgbG9nTWVzc2FnZTogZmFsc2UsXG4gIH0pXG5cbiAgcnVuTW9jaGFJblN1YnByb2Nlc3MoKSAvLyBpbml0aWFsIHRyaWdnZXIgYWN0aW9uLCB0byBydW4gdGVzdCBpbW1lZGlhdGVseVxufVxuXG4vKipcbiAqIEFsbG93cyB0byB1c2UgTm9kZWpzIGluc3BlY3RvciB3aXRoIHRoZSBjdXJyZW50IHdheSB0ZXN0cyBhcmUgcnVuLCB3aGVyZSB0ZXN0cyBhcmUgcnVuIGluIHN1YnByb2Nlc3NlcyBhbmQgbm8gTm9kZWpzIGZsYWdzIGFyZSBwYXNzZWQuXG4gKiBDdXJyZW50bHkgaXRzIHBvc3NpYmxlIHRvIHVzZSBpbnNwZWN0b3IgcHJvZ3JhbW1hdGljIEFQSSwgYnV0IHRvIGFsbG93IGxpdmVyZWxvYWQgZWFjaCB0ZXN0IHN1YnByb2Nlc3Mgc2hvdWxkIGJlIGtlcHQgYWxpdmUgZS5nLiB1c2luZyBgc2V0VGltZW91dGAgdG8gYWxsb3cgZm9yIGluc3BlY3Rpbmcgb2JqZWN0IHZhbHVlcyBldGMuXG4gKiBVc2FnZTpcbiAqICAtIGV4ZWN1dGUgdGhpcyBmdW5jdGlvbiBpbiB0aGUgdG9wIG9mIGEgdGVzdC5cbiAqICAtIGluc2VydCBgZGVidWdnZXJgIHN0YXRlbWVudCBpbiB0aGUgdGVzdCBmaWxlcyB0byBicmVhayBhZnRlciByZWZyZXNoaW5nIHByb2Nlc3MuXG4gKlxuICovXG5leHBvcnQgZnVuY3Rpb24gc3VicHJvY2Vzc0luc3BlY3Rvcih7IHBvcnQgPSA5MjI5LCBob3N0ID0gJ2xvY2FsaG9zdCcsIHNob3VsZGJyZWFrID0gdHJ1ZSB9ID0ge30pIHtcbiAgY29uc3QgaW5zcGVjdG9yID0gcmVxdWlyZSgnaW5zcGVjdG9yJylcbiAgaW5zcGVjdG9yLm9wZW4ocG9ydCwgaG9zdCwgc2hvdWxkYnJlYWspXG4gIC8vIEtlZXAgTm9kZSBhbGl2ZSB0byBhbGxvdyBmb3IgaW5zcGVjdGluZyBvYmplY3RzLlxuICBwcm9jZXNzLm9uKCdiZWZvcmVFeGl0JywgKCkgPT4ge1xuICAgIHNldFRpbWVvdXQoKCkgPT4ge30sIDEwMDAwMDAwMDApXG4gIH0pXG4gIHJldHVybiBpbnNwZWN0b3Jcbn1cbiJdfQ==

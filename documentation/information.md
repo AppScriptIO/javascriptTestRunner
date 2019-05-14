@@ -8,6 +8,7 @@ _This prevents the need to manually reload Chrome inspector window or focus the 
 
 # Usage: 
 node --no-lazy ./node_modules/.bin/scriptManager test "({ testPath: './distribution/test', shouldDebugger: true, shouldCompileTest: false })"
+yarn run scriptManager test "({ testPath: ['./distribution/test'], shouldDebugger: true, shouldCompileTest: false })"
 
 ___ 
 [TODO list](/documentation/TODO.md)

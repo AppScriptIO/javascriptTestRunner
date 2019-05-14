@@ -59,7 +59,13 @@ export async function runTest({
   function runMochaInSubprocess() {
     let stringifyArgs = JSON.stringify([{ testTarget: testFileArray, jsFileArray: jsFileArrayOfArray, shouldCompileTest, shouldDebugger, targetProject }]) // parametrs for mocha module.
     // running in subprocess prevents conflicts between tests and allows to control the test and terminate it when needed.
-    subprocess = childProcess.fork(mochaModule, [stringifyArgs], { stdio: [0, 1, 2, 'ipc'] })
+    subprocess = childProcess.fork(mochaModule, [stringifyArgs], {
+      stdio: [0, 1, 2, 'ipc'],
+      execArgv: [
+        // '--inspect-brk=1272', // inspect subprocess with random port to prevent conflicts with the main process in case it's inspect flag was turned on.
+        '--no-lazy', // for debugging purposes will load modules sequentially
+      ],
+    })
     // subprocess.on('exit', () => console.log(`Test subprocess ${subprocess.pid} exited.`));
   }
 

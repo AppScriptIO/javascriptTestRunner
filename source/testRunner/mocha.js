@@ -43,7 +43,10 @@ export function runMocha({
 
   // Run tests.
   try {
-    if (shouldDebugger) subprocessInspector()
+    if (shouldDebugger) {
+      subprocessInspector()
+      debugger // When using runtime inspector API, the breakpoints won't be recognized without breaking.
+    }
     mocha.run(error => {
       // exit with non-zero status if there were failures
       if (error) {

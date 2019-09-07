@@ -28,7 +28,8 @@ export async function runTest({
   let targetProjectRootPath = targetProject.configuration.rootPath
 
   // ignore temporary transpilation files to prevent watch event emission loop when inspector debugging and auto attach for debugger.
-  if (ignoreRegex.length != 0) {
+  // TODO: Read .ignore files and ignore them in the watch list to prevent change callback triggering.
+  if (ignoreRegex.length == 0) {
     ignoreRegex.push(new RegExp(`${path.join(targetProjectRootPath, 'temporary')}`))
     ignoreRegex.push(new RegExp(`${path.join(targetProjectRootPath, 'distribution')}`))
   }
@@ -51,7 +52,6 @@ export async function runTest({
 
   // await filesystem.lstat(filePath).then(statObject => statObject.isDirectory()) // check if path is a directory
 
-  // TODO: Read .ignore files and ignore them in the watch list to prevent change callback triggering.
   jsPath.push(targetProjectRootPath)
   let jsFileArray = jsPath.map(pathArray => listFileWithExtension({ directory: pathArray, extension: jsFileExtension, ignoreRegex }))
   let jsFileArrayOfArray = Array.prototype.concat.apply(jsFileArray, testFileArray)

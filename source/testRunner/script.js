@@ -9,7 +9,7 @@ import childProcess from 'child_process'
 export async function runTest({
   targetProject, // `Project class` instance created by `scriptManager` from the configuration file of the target project.
   testPath = [], // relative or absolute
-  jsPath = [],
+  jsPath = [], // TODO: make sure explicitly adding `./node_modules/` into the this array, will prevent it from being ignored.
   jsFileExtension = ['.js', '.ts'],
   testFileExtension = ['.test.js'],
   ignoreRegex = [],

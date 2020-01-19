@@ -5,14 +5,43 @@ const mochaModule = path.join(__dirname, '../../entrypoint/cli/index.js') // moc
 import { watchFile } from '@dependency/nodejsLiveReload'
 import { promises as filesystem } from 'fs'
 import childProcess from 'child_process'
+// await filesystem.lstat(filePath).then(statObject => statObject.isDirectory()) // check if path is a directory
+
+/** Resolve test file paths from a list of direcotyr and file paths */
+export function resolveAndLookupFile({ pathArray /** relative or absolute paths */, basePath /** the base path for relative paths */, fileExtension, ignoreRegex = [] }) {
+  pathArray = [...new Set(pathArray)] // remove duplicate enteries.
+
+  // ignore temporary transpilation files to prevent watch event emission loop when inspector debugging and auto attach for debugger.
+  // TODO: Read .ignore files and ignore them in the watch list to prevent change callback triggering.
+  if (ignoreRegex.length == 0) {
+    ignoreRegex.push(new RegExp(`${path.join(basePath, 'temporary')}`))
+    ignoreRegex.push(new RegExp(`${path.join(basePath, 'distribution')}`))
+  }
+
+  /* List all files in a directory recursively */
+  console.log(`• Searching for ${JSON.stringify(fileExtension)} extension files, in path ${JSON.stringify(pathArray)}.`)
+  let fileArray = []
+  pathArray.forEach(currentPath => {
+    currentPath = !path.isAbsolute(currentPath) ? path.join(basePath, currentPath) : currentPath // resolve to absolute path
+    console.log(`• Test path: ${currentPath}`)
+    if (fileExtension.some(extension => currentPath.endsWith(extension))) {
+      // file path
+      fileArray.push(currentPath)
+    } else {
+      // directory path
+      let fileList = listFileWithExtension({ directory: currentPath, extension: fileExtension, ignoreRegex })
+      fileArray = [...fileArray, ...fileList]
+    }
+  })
+
+  fileArray = [...new Set(fileArray)] // remove duplicate enteries.
+  return fileArray
+}
 
 export async function runTest({
   targetProject, // `Project class` instance created by `scriptManager` from the configuration file of the target project.
-  testPath = [], // relative or absolute
+  testPath = [], // relative or absolute paths
   jsPath = [], // TODO: make sure explicitly adding `./node_modules/` into the this array, will prevent it from being ignored.
-  jsFileExtension = ['.js', '.ts'],
-  testFileExtension = ['.test.js'],
-  ignoreRegex = [],
   shouldCompileTest,
   shouldDebugger = false, // run ispector during runtime.
 } = {}) {
@@ -27,38 +56,12 @@ export async function runTest({
   assert(targetProject, `targetProject must be passed.`)
   let targetProjectRootPath = targetProject.configuration.rootPath
 
-  // ignore temporary transpilation files to prevent watch event emission loop when inspector debugging and auto attach for debugger.
-  // TODO: Read .ignore files and ignore them in the watch list to prevent change callback triggering.
-  if (ignoreRegex.length == 0) {
-    ignoreRegex.push(new RegExp(`${path.join(targetProjectRootPath, 'temporary')}`))
-    ignoreRegex.push(new RegExp(`${path.join(targetProjectRootPath, 'distribution')}`))
-  }
-
-  /* List all files in a directory recursively */
-  console.log(`• Searching for ${JSON.stringify(testFileExtension)} extension files, in path ${JSON.stringify(testPath)}.`)
-  let testFileArray = []
-  testPath.forEach(p => {
-    p = !path.isAbsolute(p) ? path.join(targetProjectRootPath, p) : p // resolve to absolute path
-    console.log(`• Test path: ${p}`)
-    if (testFileExtension.some(extension => p.endsWith(extension))) {
-      // file path
-      testFileArray.push(p)
-    } else {
-      // directory path
-      let fileList = listFileWithExtension({ directory: p, extension: testFileExtension })
-      testFileArray = Array.prototype.concat.apply(testFileArray, fileList)
-    }
-  })
-
-  // await filesystem.lstat(filePath).then(statObject => statObject.isDirectory()) // check if path is a directory
-
-  jsPath.push(targetProjectRootPath)
-  let jsFileArray = jsPath.map(pathArray => listFileWithExtension({ directory: pathArray, extension: jsFileExtension, ignoreRegex }))
-  let jsFileArrayOfArray = Array.prototype.concat.apply(jsFileArray, testFileArray)
+  let testFileArray = resolveAndLookupFile({ pathArray: [...testPath], basePath: targetProjectRootPath, fileExtension: ['.test.js'] })
+  let jsFileArray = resolveAndLookupFile({ pathArray: [...jsPath, ...testFileArray, targetProjectRootPath], basePath: targetProjectRootPath, fileExtension: ['.js', '.ts'] })
 
   let subprocess // subprocess reference to control termination.
   function runMochaInSubprocess() {
-    let stringifyArgs = JSON.stringify([{ testTarget: testFileArray, jsFileArray: jsFileArrayOfArray, shouldCompileTest, shouldDebugger, targetProject }]) // parametrs for mocha module.
+    let stringifyArgs = JSON.stringify([{ testTarget: testFileArray, jsFileArray: jsFileArray, shouldCompileTest, shouldDebugger, targetProject }]) // parametrs for mocha module.
     // running in subprocess prevents conflicts between tests and allows to control the test and terminate it when needed.
     subprocess = childProcess.fork(mochaModule, [stringifyArgs], {
       stdio: [0, 1, 2, 'ipc'],
@@ -76,7 +79,7 @@ export async function runTest({
       subprocess && subprocess.kill('SIGINT')
       runMochaInSubprocess()
     },
-    fileArray: Array.prototype.concat.apply([testFileArray], jsFileArrayOfArray), // add node_modules js files
+    fileArray: jsFileArray,
     ignoreNodeModules: true,
     logMessage: false,
   })

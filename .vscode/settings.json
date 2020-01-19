@@ -53,6 +53,7 @@
     "typescript.check.npmIsInstalled": false,
     "workbench.colorCustomizations": {
         "activityBar.background": "#a78bce",
+        "activityBar.activeBorder": "#865939",
         "activityBar.foreground": "#15202b",
         "activityBar.inactiveForeground": "#15202b99",
         "activityBarBadge.background": "#865939",
@@ -65,5 +66,8 @@
         "statusBarItem.hoverBackground": "#8c67bf",
         "statusBar.foreground": "#15202b"
     },
-    "peacock.color": "#c2afdd"
+    "peacock.color": "#c2afdd",
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    }
 }

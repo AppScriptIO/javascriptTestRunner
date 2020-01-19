@@ -1,6 +1,6 @@
 {
 	"name": "@dependency/javascriptTestRunner",
-	"version": "1.1.6",
+	"version": "1.1.7",
 	"main": "./entrypoint/programmaticAPI",
 	"description": "Mocha test runner for unit tests and integration tests.",
 	"bin": {
@@ -21,7 +21,7 @@
 		"sinon": "*"
 	},
 	"devDependencies": {
-		"@dependency/deploymentScript": "https://github.com/AppScriptIO/deploymentScript#semver:^1.x.x",
+		"@dependency/deploymentScript": "https://github.com/AppScriptIO/deploymentScript#semver:^2.x.x",
 		"@dependency/javascriptStaticAnalysis": "https://github.com/AppScriptIO/javascriptStaticAnalysis#semver:^1.x.x",
 		"@dependency/scriptManager": "https://github.com/AppScriptIO/scriptManager#semver:^1.x.x",
 		"typescript": "^3.3.3333"

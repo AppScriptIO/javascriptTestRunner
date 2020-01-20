@@ -992,13 +992,13 @@
     vinyl-fs "*"
 
 "@dependency/configurationManagement@http://github.com/AppScriptIO/configurationManagement#semver:^1.x.x":
-  version "1.0.4"
-  uid "4b9ba191b7f9d1fbcfad46978d6c0e865852a4fe"
-  resolved "http://github.com/AppScriptIO/configurationManagement#4b9ba191b7f9d1fbcfad46978d6c0e865852a4fe"
+  version "1.0.5"
+  uid c0d6aac471cdd123000c69dcc03d26a48f693bdd
+  resolved "http://github.com/AppScriptIO/configurationManagement#c0d6aac471cdd123000c69dcc03d26a48f693bdd"
 
 "@dependency/configurationManagement@https://github.com/AppScriptIO/configurationManagement#semver:^1.x.x":
-  version "1.0.4"
-  resolved "https://github.com/AppScriptIO/configurationManagement#4b9ba191b7f9d1fbcfad46978d6c0e865852a4fe"
+  version "1.0.5"
+  resolved "https://github.com/AppScriptIO/configurationManagement#c0d6aac471cdd123000c69dcc03d26a48f693bdd"
 
 "@dependency/deploymentProvisioning@https://github.com/AppScriptIO/deploymentProvisioning#semver:^1.x.x":
   version "1.0.10"
@@ -1016,21 +1016,23 @@
     which "*"
 
 "@dependency/deploymentScript@https://github.com/AppScriptIO/deploymentScript#semver:^2.x.x":
-  version "2.0.2"
-  resolved "https://github.com/AppScriptIO/deploymentScript#37d07e9dd0710ab060dfed31196d1a14f2c951e4"
+  version "2.0.3"
+  resolved "https://github.com/AppScriptIO/deploymentScript#a32752cfc2686247f8b9d576b8e67f323c7cf1cf"
   dependencies:
     "@dependency/buildTool" "https://github.com/AppScriptIO/buildTool#semver:2.x.x"
     "@dependency/deploymentProvisioning" "https://github.com/AppScriptIO/deploymentProvisioning#semver:^1.x.x"
     "@dependency/entity" "https://github.com/AppScriptIO/entity#semver:1.0.15"
     "@dependency/graphTraversal" "https://github.com/AppScriptIO/graphTraversal#semver:4.x.x"
     "@dependency/graphTraversal-implementation" "https://github.com/AppScriptIO/graphTraversal-implementation#semver:4.x.x"
-    "@dependency/javascriptTestRunner" "git+https://github.com/AppScriptIO/javascriptTestRunner.git#semver:^1.x.x"
-    "@dependency/nodejsLiveReload" "git+https://github.com/AppScriptIO/nodejsLiveReload.git#semver:^1.x.x"
+    "@dependency/javascriptTestRunner" "https://github.com/AppScriptIO/javascriptTestRunner#semver:^1.x.x"
+    "@dependency/nodejsLiveReload" "https://github.com/AppScriptIO/nodejsLiveReload#semver:^2.x.x"
+    "@dependency/resolveAndLookupPath" "https://github.com/AppScriptIO/resolveAndLookupPath#semver:^1.x.x"
     apollo-cache-inmemory "*"
     apollo-client "*"
     apollo-link "*"
     apollo-link-error "*"
     apollo-link-http "*"
+    dockerode "^3.0.2"
     fs-extra "*"
     git-url-parse "^*"
     graphql "*"
@@ -1101,9 +1103,9 @@
     prettier "^1.16.4"
     typescript "^3.3.3333"
 
-"@dependency/javascriptTestRunner@git+https://github.com/AppScriptIO/javascriptTestRunner.git#semver:^1.x.x":
-  version "1.1.6"
-  resolved "git+https://github.com/AppScriptIO/javascriptTestRunner.git#71dfef7170e31a1e9b19d9b11e0ff0e8689eaf6c"
+"@dependency/javascriptTestRunner@https://github.com/AppScriptIO/javascriptTestRunner#semver:^1.x.x":
+  version "1.3.1"
+  resolved "https://github.com/AppScriptIO/javascriptTestRunner#82ab2a41dea4b3b1937226ee90d40ea8ba4b6db3"
   dependencies:
     "@dependency/javascriptTranspilation" "https://github.com/AppScriptIO/javascriptTranspilation#semver:^1.x.x"
     "@dependency/nodejsLiveReload" "https://github.com/AppScriptIO/nodejsLiveReload#semver:^1.x.x"
@@ -1115,8 +1117,8 @@
     sinon "*"
 
 "@dependency/javascriptTranspilation@https://github.com/AppScriptIO/javascriptTranspilation#semver:^1.x.x":
-  version "1.2.8"
-  resolved "https://github.com/AppScriptIO/javascriptTranspilation#1c621f97390864aee61b9ed618d8c71cdcf807a9"
+  version "1.2.9"
+  resolved "https://github.com/AppScriptIO/javascriptTranspilation#6e996d8a0ea6de6b934972ae4e0162bf8c804fba"
   dependencies:
     "@babel/babel-plugin-functionSentProxyImplementation" "https://github.com/AppScriptIO/babel-plugin-functionSentProxyImplementation#semver:^1.x.x"
     "@babel/cli" "*"
@@ -1160,10 +1162,6 @@
     babel-preset-minify "*"
     pirates "^4.0.1"
 
-"@dependency/listDirectoryContent@http://github.com/AppScriptIO/listDirectoryContent#semver:^1.x.x":
-  version "1.0.2"
-  resolved "http://github.com/AppScriptIO/listDirectoryContent#d6c71ec86993e95892ff2f94bde12d089843dbb8"
-
 "@dependency/moduleScopePattern@https://github.com/AppScriptIO/moduleScopePattern#semver:^1.x.x":
   version "1.0.2"
   resolved "https://github.com/AppScriptIO/moduleScopePattern#82c3ee40de9a3e8bb5fe137b1337e27863266e90"
@@ -1175,18 +1173,17 @@
   version "1.0.17"
   resolved "https://github.com/AppScriptIO/multiplePrototypeDelegation#b36efb3cc5d7c807385f68aaf9521975d3251d6a"
 
-"@dependency/nodejsLiveReload@git+https://github.com/AppScriptIO/nodejsLiveReload.git#semver:^1.x.x":
+"@dependency/nodejsLiveReload@https://github.com/AppScriptIO/nodejsLiveReload#semver:^1.x.x":
   version "1.0.3"
-  resolved "git+https://github.com/AppScriptIO/nodejsLiveReload.git#269ef8dc4c9ba82f4b4df441f46a30de150586f2"
+  resolved "https://github.com/AppScriptIO/nodejsLiveReload#269ef8dc4c9ba82f4b4df441f46a30de150586f2"
   dependencies:
     browser-sync "*"
     chokidar "*"
     core-js "*"
 
-"@dependency/nodejsLiveReload@https://github.com/AppScriptIO/nodejsLiveReload#semver:^1.x.x":
-  version "1.0.3"
-  uid "269ef8dc4c9ba82f4b4df441f46a30de150586f2"
-  resolved "https://github.com/AppScriptIO/nodejsLiveReload#269ef8dc4c9ba82f4b4df441f46a30de150586f2"
+"@dependency/nodejsLiveReload@https://github.com/AppScriptIO/nodejsLiveReload#semver:^2.x.x":
+  version "2.0.2"
+  resolved "https://github.com/AppScriptIO/nodejsLiveReload#e6c50614530853a36e59c01e62ef4b799d28d782"
   dependencies:
     browser-sync "*"
     chokidar "*"
@@ -1204,14 +1201,23 @@
   version "1.0.2"
   resolved "https://github.com/AppScriptIO/recursiveCreateDirectory#56c4d3e62b7e4158040963e6ba07bc1211e883a3"
 
+"@dependency/resolveAndLookupPath@http://github.com/AppScriptIO/resolveAndLookupPath#semver:^1.x.x":
+  version "1.1.1"
+  uid "88e86468b7bc6ee8801b9b9f9625809e0cd685bf"
+  resolved "http://github.com/AppScriptIO/resolveAndLookupPath#88e86468b7bc6ee8801b9b9f9625809e0cd685bf"
+
+"@dependency/resolveAndLookupPath@https://github.com/AppScriptIO/resolveAndLookupPath#semver:^1.x.x":
+  version "1.1.1"
+  resolved "https://github.com/AppScriptIO/resolveAndLookupPath#88e86468b7bc6ee8801b9b9f9625809e0cd685bf"
+
 "@dependency/scriptExecution@https://github.com/AppScriptIO/scriptExecution#semver:^1.x.x":
-  version "1.0.4"
-  resolved "https://github.com/AppScriptIO/scriptExecution#cc7743e4d73fc9a06a6d4af3b1a7cc3ae1155c2b"
+  version "1.0.5"
+  resolved "https://github.com/AppScriptIO/scriptExecution#9b85dd6e64e1ecf915b959ea79424bc4d2963ba9"
   dependencies:
     "@dependency/JSModuleTypeCheck" "http://github.com/AppScriptIO/JSModuleTypeCheck#semver:^1.x.x"
     "@dependency/configurationManagement" "http://github.com/AppScriptIO/configurationManagement#semver:^1.x.x"
     "@dependency/installNodeJSModule" "http://github.com/AppScriptIO/installNodeJSModule#semver:^1.x.x"
-    "@dependency/listDirectoryContent" "http://github.com/AppScriptIO/listDirectoryContent#semver:^1.x.x"
+    "@dependency/resolveAndLookupPath" "http://github.com/AppScriptIO/resolveAndLookupPath#semver:^1.x.x"
 
 "@dependency/scriptManager@https://github.com/AppScriptIO/scriptManager#semver:^1.x.x":
   version "1.0.10"
@@ -2561,6 +2567,13 @@ bl@^1.0.0:
     readable-stream "^2.3.5"
     safe-buffer "^5.1.1"
 
+bl@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/bl/-/bl-3.0.0.tgz#3611ec00579fd18561754360b21e9f784500ff88"
+  integrity sha512-EUAyP5UHU5hxF8BPT0LKW8gjYLhq1DQIcneOX/pL/m2Alo+OYDQAJlHq+yseMP50Os2nHXOSic6Ss3vSQeyf4A==
+  dependencies:
+    readable-stream "^3.0.1"
+
 blob@0.0.5:
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/blob/-/blob-0.0.5.tgz#d680eeef25f8cd91ad533f5b01eed48e64caf683"
@@ -3198,6 +3211,16 @@ concat-stream@^1.6.0, concat-stream@~1.6.2:
     readable-stream "^2.2.2"
     typedarray "^0.0.6"
 
+concat-stream@~2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/concat-stream/-/concat-stream-2.0.0.tgz#414cf5af790a48c60ab9be4527d56d5e41133cb1"
+  integrity sha512-MWufYdFw53ccGjCA+Ol7XJYpAlW6/prSMzuPOTRnJGcGzuhLn4Scrz7qf6o8bROZ514ltazcIFJZevcfbo0x7A==
+  dependencies:
+    buffer-from "^1.0.0"
+    inherits "^2.0.3"
+    readable-stream "^3.0.2"
+    typedarray "^0.0.6"
+
 concat-with-sourcemaps@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/concat-with-sourcemaps/-/concat-with-sourcemaps-1.1.0.tgz#d4ea93f05ae25790951b99e7b3b09e3908a4082e"
@@ -3587,6 +3610,17 @@ docker-modem@^1.0.8:
     readable-stream "~1.0.26-4"
     split-ca "^1.0.0"
 
+docker-modem@^2.0.0:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/docker-modem/-/docker-modem-2.0.4.tgz#d54378e37d8868cde33cd755295186927c62f558"
+  integrity sha512-fj0pt7iEXCPCN9wDWJRyjQJ1POcmCwPmuId/Eg+bxULsxI7l9GHEyol4HY9fH4B/I69J67ATqQ09SOfzgwbZlg==
+  dependencies:
+    JSONStream "1.3.2"
+    debug "^3.2.6"
+    readable-stream "~1.0.26-4"
+    split-ca "^1.0.0"
+    ssh2 "^0.8.5"
+
 dockerode@^2.5.1:
   version "2.5.8"
   resolved "https://registry.yarnpkg.com/dockerode/-/dockerode-2.5.8.tgz#1b661e36e1e4f860e25f56e0deabe9f87f1d0acc"
@@ -3595,6 +3629,15 @@ dockerode@^2.5.1:
     concat-stream "~1.6.2"
     docker-modem "^1.0.8"
     tar-fs "~1.16.3"
+
+dockerode@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/dockerode/-/dockerode-3.0.2.tgz#6e61de42ecbbae997196874e53150e3d7ae3c964"
+  integrity sha512-jql7zwTQH2psjyevyeWOpe9XJ8x1WbXX/TwKHcWlJsq1jivxN2+1nVqT72HKE9xxNR/MGcuWcPxrCBHNu9GZpw==
+  dependencies:
+    concat-stream "~2.0.0"
+    docker-modem "^2.0.0"
+    tar-fs "~2.0.0"
 
 doctrine@^2.0.2:
   version "2.1.0"
@@ -3710,9 +3753,9 @@ ee-first@1.1.1:
   integrity sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0=
 
 electron-to-chromium@^1.3.322:
-  version "1.3.337"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.337.tgz#b2c093cdb66121a946d333b454adcdc5666ceaed"
-  integrity sha512-uJ+wLjslYQ/2rAusDg+6FlK8DLhHWTLCe7gkofBehTifW7KCkPVTn5rhKSCncWYNq34Iy/o4OfswuEkAO2RBaw==
+  version "1.3.338"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.338.tgz#4f33745aed599dfa0fd7b388bf754c164e915168"
+  integrity sha512-wlmfixuHEc9CkfOKgcqdtzBmRW4NStM9ptl5oPILY2UDyHuSXb3Yit+yLVyLObTgGuMMU36hhnfs2GDJId7ctA==
 
 emitter-component@^1.1.1:
   version "1.1.1"
@@ -3824,9 +3867,9 @@ error-ex@^1.2.0, error-ex@^1.3.1:
     is-arrayish "^0.2.1"
 
 es-abstract@^1.17.0-next.1, es-abstract@^1.17.2:
-  version "1.17.2"
-  resolved "https://registry.yarnpkg.com/es-abstract/-/es-abstract-1.17.2.tgz#965b10af56597b631da15872c17a405e86c1fd46"
-  integrity sha512-YoKuru3Lyoy7yVTBSH2j7UxTqe/je3dWAruC0sHvZX1GNd5zX8SSLvQqEgO9b3Ex8IW+goFI9arEEsFIbulhOw==
+  version "1.17.3"
+  resolved "https://registry.yarnpkg.com/es-abstract/-/es-abstract-1.17.3.tgz#d921ff5889a3664921094bb13aaf0dfd11818578"
+  integrity sha512-AwiVPKf3sKGMoWtFw0J7Y4MTZ4Iek67k4COWOwHqS8B9TOZ71DCfcoBmdamy8Y6mj4MDz0+VNUpC2HKHFHA3pg==
   dependencies:
     es-to-primitive "^1.2.1"
     function-bind "^1.1.1"
@@ -5742,9 +5785,9 @@ is-valid-glob@^1.0.0:
   integrity sha1-Kb8+/3Ab4tTTFdusw5vDn+j2Aao=
 
 is-what@^3.3.1:
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/is-what/-/is-what-3.5.0.tgz#c50b0e8f3021e0b39410c159bea43a5510d99027"
-  integrity sha512-00pwt/Jf7IaRh5m2Dp93Iw8LG2cd3OpDj3NrD1XPNUpAWVxPvBP296p4IiGmIU4Ur0f3f56IoIM+fS2pFYF+tQ==
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/is-what/-/is-what-3.5.1.tgz#069d31d97afc62bcbfb281ef6a1dd89461ebee76"
+  integrity sha512-NHeqazf97ZVerGNEDmYG4+J4UY3uDQOjaJNMIMXw2i/tFfMconSgSK8Z27Y4VWMbM96E9ylroUSnD7jXRjzBwA==
 
 is-windows@^1.0.1, is-windows@^1.0.2:
   version "1.0.2"
@@ -7977,7 +8020,7 @@ read-pkg@^1.0.0:
     normalize-package-data "^2.3.2"
     path-type "^1.0.0"
 
-"readable-stream@2 || 3", readable-stream@^3.1.1:
+"readable-stream@2 || 3", readable-stream@^3.0.1, readable-stream@^3.0.2, readable-stream@^3.1.1:
   version "3.5.0"
   resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-3.5.0.tgz#465d70e6d1087f6162d079cd0b5db7fbebfd1606"
   integrity sha512-gSz026xs2LfxBPudDuI41V1lka8cxg64E66SGe78zJlsUofOg/yqwezdIcdfwik6B4h8LFmWPA9ef9X3FiNFLA==
@@ -8868,7 +8911,7 @@ ssh2-streams@~0.4.8:
     bcrypt-pbkdf "^1.0.2"
     streamsearch "~0.1.2"
 
-ssh2@^0.8.7:
+ssh2@^0.8.5, ssh2@^0.8.7:
   version "0.8.7"
   resolved "https://registry.yarnpkg.com/ssh2/-/ssh2-0.8.7.tgz#2dc15206f493010b98027201cf399b90bab79c89"
   integrity sha512-/u1BO12kb0lDVxJXejWB9pxyF3/ncgRqI9vPCZuPzo05pdNDzqUeQRavScwSPsfMGK+5H/VRqp1IierIx0Bcxw==
@@ -9182,6 +9225,16 @@ tar-fs@~1.16.3:
     pump "^1.0.0"
     tar-stream "^1.1.2"
 
+tar-fs@~2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/tar-fs/-/tar-fs-2.0.0.tgz#677700fc0c8b337a78bee3623fdc235f21d7afad"
+  integrity sha512-vaY0obB6Om/fso8a8vakQBzwholQ7v5+uy+tF3Ozvxv1KNezmVQAiWtcNmMHFSFPqL3dJA8ha6gdtFbfX9mcxA==
+  dependencies:
+    chownr "^1.1.1"
+    mkdirp "^0.5.1"
+    pump "^3.0.0"
+    tar-stream "^2.0.0"
+
 tar-stream@^1.1.2:
   version "1.6.2"
   resolved "https://registry.yarnpkg.com/tar-stream/-/tar-stream-1.6.2.tgz#8ea55dab37972253d9a9af90fdcd559ae435c555"
@@ -9194,6 +9247,17 @@ tar-stream@^1.1.2:
     readable-stream "^2.3.0"
     to-buffer "^1.1.1"
     xtend "^4.0.0"
+
+tar-stream@^2.0.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/tar-stream/-/tar-stream-2.1.0.tgz#d1aaa3661f05b38b5acc9b7020efdca5179a2cc3"
+  integrity sha512-+DAn4Nb4+gz6WZigRzKEZl1QuJVOLtAwwF+WUxy1fJ6X63CaGaUAxJRD2KEn1OMfcbCjySTYpNC6WmfQoIEOdw==
+  dependencies:
+    bl "^3.0.0"
+    end-of-stream "^1.4.1"
+    fs-constants "^1.0.0"
+    inherits "^2.0.3"
+    readable-stream "^3.1.1"
 
 tar@^4.4.2:
   version "4.4.13"

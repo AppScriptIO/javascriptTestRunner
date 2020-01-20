@@ -1,14 +1,15 @@
-/**
- * Interface for running mocha function through childprocess.spawn api (as it allows only a module path to be passed as parameter).
- */
-import { runMocha } from '../mocha.js'
-import assert from 'assert'
-import { consoleLogOverwrite } from '../utility/consoleLogOverwrite.js'
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
-consoleLogOverwrite()
 
-process.on('SIGINT', () => console.log('Mocha test subprocess iterrupted.') && process.exit(0))
+var _mocha = require("../mocha.js");
+var _assert = _interopRequireDefault(require("assert"));
+var _consoleLogOverwrite = require("../utility/consoleLogOverwrite.js");
 
-assert(process.argv[2], '• Must pass command arguments to run Mocha cli script.')
-let args = JSON.parse(process.argv[2])
-runMocha(...args)
+(0, _consoleLogOverwrite.consoleLogOverwrite)();
+
+process.on('SIGINT', () => console.log('Mocha test subprocess iterrupted.') && process.exit(0));
+
+(0, _assert.default)(process.argv[2], '• Must pass command arguments to run Mocha cli script.');
+let args = JSON.parse(process.argv[2]);
+(0, _mocha.runMocha)(...args);
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uL3NvdXJjZS9jbGllbnRJbnRlcmZhY2UvbW9jaGFTdWJwcm9jZXNzQ2xpLmpzIl0sIm5hbWVzIjpbInByb2Nlc3MiLCJvbiIsImNvbnNvbGUiLCJsb2ciLCJleGl0IiwiYXJndiIsImFyZ3MiLCJKU09OIiwicGFyc2UiXSwibWFwcGluZ3MiOiI7OztBQUdBO0FBQ0E7QUFDQTs7QUFFQTs7QUFFQUEsT0FBTyxDQUFDQyxFQUFSLENBQVcsUUFBWCxFQUFxQixNQUFNQyxPQUFPLENBQUNDLEdBQVIsQ0FBWSxtQ0FBWixLQUFvREgsT0FBTyxDQUFDSSxJQUFSLENBQWEsQ0FBYixDQUEvRTs7QUFFQSxxQkFBT0osT0FBTyxDQUFDSyxJQUFSLENBQWEsQ0FBYixDQUFQLEVBQXdCLHdEQUF4QjtBQUNBLElBQUlDLElBQUksR0FBR0MsSUFBSSxDQUFDQyxLQUFMLENBQVdSLE9BQU8sQ0FBQ0ssSUFBUixDQUFhLENBQWIsQ0FBWCxDQUFYO0FBQ0EscUJBQVMsR0FBR0MsSUFBWiIsInNvdXJjZXNDb250ZW50IjpbIi8qKlxuICogSW50ZXJmYWNlIGZvciBydW5uaW5nIG1vY2hhIGZ1bmN0aW9uIHRocm91Z2ggY2hpbGRwcm9jZXNzLnNwYXduIGFwaSAoYXMgaXQgYWxsb3dzIG9ubHkgYSBtb2R1bGUgcGF0aCB0byBiZSBwYXNzZWQgYXMgcGFyYW1ldGVyKS5cbiAqL1xuaW1wb3J0IHsgcnVuTW9jaGEgfSBmcm9tICcuLi9tb2NoYS5qcydcbmltcG9ydCBhc3NlcnQgZnJvbSAnYXNzZXJ0J1xuaW1wb3J0IHsgY29uc29sZUxvZ092ZXJ3cml0ZSB9IGZyb20gJy4uL3V0aWxpdHkvY29uc29sZUxvZ092ZXJ3cml0ZS5qcydcblxuY29uc29sZUxvZ092ZXJ3cml0ZSgpXG5cbnByb2Nlc3Mub24oJ1NJR0lOVCcsICgpID0+IGNvbnNvbGUubG9nKCdNb2NoYSB0ZXN0IHN1YnByb2Nlc3MgaXRlcnJ1cHRlZC4nKSAmJiBwcm9jZXNzLmV4aXQoMCkpXG5cbmFzc2VydChwcm9jZXNzLmFyZ3ZbMl0sICfigKIgTXVzdCBwYXNzIGNvbW1hbmQgYXJndW1lbnRzIHRvIHJ1biBNb2NoYSBjbGkgc2NyaXB0LicpXG5sZXQgYXJncyA9IEpTT04ucGFyc2UocHJvY2Vzcy5hcmd2WzJdKVxucnVuTW9jaGEoLi4uYXJncylcbiJdfQ==

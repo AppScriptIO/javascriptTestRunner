@@ -1,46 +1,9 @@
 import path from 'path'
 import assert from 'assert'
-import { listFileRecursively, listFileWithExtension } from '../utility/listFileRecursively.js'
 const mochaModule = path.join(__dirname, '../../entrypoint/cli/index.js') // mocha cli for running using nodejs spawn child process interface (accepting only module paths)
 import childProcess from 'child_process'
 import { promises as filesystem } from 'fs'
 // await filesystem.lstat(filePath).then(statObject => statObject.isDirectory()) // check if path is a directory
-
-/** Resolve test file paths from a list of direcotyr and file paths */
-export function resolveAndLookupFile({
-  pathArray /** relative or absolute paths */,
-  basePath /** the base path for relative paths */,
-  fileExtension,
-  ignoreRegex = [path.join(basePath, 'temporary'), path.join(basePath, 'distribution')] /*can contain regex or paths*/,
-}) {
-  pathArray = [...new Set(pathArray)] // remove duplicate enteries.
-
-  // ignore temporary transpilation files to prevent watch event emission loop when inspector debugging and auto attach for debugger.
-  // TODO: Read .ignore files and ignore them in the watch list to prevent change callback triggering.
-  ignoreRegex = ignoreRegex
-    // TODO: verify regex not ignoring files it supposed to keep and ignoring others.
-    .filter(ignore => !pathArray.some(inputPath => inputPath.includes(ignore))) // prevent igonring files provided as input that are supposed to be added and lookedup
-    .map(item => (item instanceof RegExp ? item : new RegExp(`${item}`))) // create regex from paths
-
-  /* List all files in a directory recursively */
-  console.log(`• Searching for ${JSON.stringify(fileExtension)} extension files, in path ${JSON.stringify(pathArray)}.`)
-  let fileArray = []
-  pathArray.forEach(currentPath => {
-    currentPath = !path.isAbsolute(currentPath) ? path.join(basePath, currentPath) : currentPath // resolve to absolute path
-    console.log(`• Test path: ${currentPath}`)
-    if (fileExtension.some(extension => currentPath.endsWith(extension))) {
-      // file path
-      fileArray.push(currentPath)
-    } else {
-      // directory path
-      let fileList = listFileWithExtension({ directory: currentPath, extension: fileExtension, ignoreRegex })
-      fileArray = [...fileArray, ...fileList]
-    }
-  })
-
-  fileArray = [...new Set(fileArray)] // remove duplicate enteries.
-  return fileArray
-}
 
 export async function runTest({
   targetProject = throw new Error('targetProject must be passed.'), // `Project class` instance created by `scriptManager` from the configuration file of the target project.

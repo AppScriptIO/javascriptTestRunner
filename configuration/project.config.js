@@ -21,8 +21,8 @@ const ownConfig = {
     return [...script, ...[{ type: 'directory', path: ownConfig.directory.script }]]
   },
   entrypoint: {
-    programmaticAPI: './testRunner/script.js',
-    cli: './testRunner/clientInterface/mochaSubprocessCli.js',
+    programmaticAPI: './script.js',
+    cli: './clientInterface/mochaSubprocessCli.js',
   },
   transpilation: {
     babelConfigKey: 'serverRuntime.BabelConfig.js',

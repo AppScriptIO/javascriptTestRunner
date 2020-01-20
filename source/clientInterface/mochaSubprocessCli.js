@@ -3,7 +3,7 @@
  */
 import { runMocha } from '../mocha.js'
 import assert from 'assert'
-import { consoleLogOverwrite } from '../../utility/consoleLogOverwrite.js'
+import { consoleLogOverwrite } from '../utility/consoleLogOverwrite.js'
 
 consoleLogOverwrite()
 

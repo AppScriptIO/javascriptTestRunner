@@ -13,9 +13,6 @@ export async function runTest({
   jsFileArray, // used to clear nodejs module cache on restart
   watchFile = false,
 } = {}) {
-  console.log(`\x1b[33m\x1b[1m\x1b[7m\x1b[36m%s\x1b[0m \x1b[2m\x1b[3m%s\x1b[0m`, `Container:`, `NodeJS App`)
-  await require('@dependency/addModuleResolutionPath').addModuleResolutionPath({ pathArray: [path.dirname(require.main.filename)] }) // Setup environment
-
   // spinning in fork process prevents conflicts between tests and allows terminating the process.
   let manageSubprocess = new ManageSubprocess({
     cliAdapterPath: path.join(__dirname, '../entrypoint/cli/index.js') /*mocha cli for running using nodejs spawn child process interface (accepting only module paths)*/,

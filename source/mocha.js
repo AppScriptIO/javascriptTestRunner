@@ -1,91 +1,92 @@
-import Mocha from 'mocha' // Mocha -Programmatic rest runner https://github.com/mochajs/mocha/wiki/Using-mocha-programmatically
-import { Compiler } from '@deployment/javascriptTranspilation'
-import { subprocessInspector } from './script.js'
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports, "__esModule", { value: true });exports.runMocha = runMocha;var _mocha = _interopRequireDefault(require("mocha"));
+var _javascriptTranspilation = require("@deployment/javascriptTranspilation");
+var _script = require("./script.js");
 
-export function runMocha({
-  mocha, // Instantiate a Mocha instance.
+function runMocha({
+  mocha,
   testTarget,
   jsFileArray,
-  shouldInvalidateRequireModule = false, // invalidation isn't needed anymore as this module is run in a subprocess
+  shouldInvalidateRequireModule = false,
   shouldCompileTest = true,
   shouldDebugger,
   targetProject,
-  mochaOption = {}
-} = {}) {
-  // programmatic api of mocha - https://github.com/mochajs/mocha/wiki/Using-Mocha-programmatically
+  mochaOption = {} } =
+{}) {
+
   mochaOption = Object.assign({
-    ui: 'tdd', // Note: not using https://mochajs.org/#require interface because it doesn't work with node cli, it requires running tests through `mocha` cli as mentioned in https://github.com/mochajs/mocha/issues/1160
-    reporter: 'progress' || 'min' /*min removes any console.log output outside of test/it blocks*/, // https://mochajs.org/#list
-    timeout: 10000 //milliseconds
-  }, mochaOption)
-  // prevent test timeout error triggering when in debug mode (as pausing script counts in the timeout).
-  if (shouldDebugger) mochaOption.timeout = Infinity // https://github.com/mochajs/mocha/blob/186ca3657b4d3e0c0a602a500653a695f4e08930/lib/runnable.js#L36
-  mocha ||= new Mocha(mochaOption)
+    ui: 'tdd',
+    reporter: 'progress' || 'min',
+    timeout: 10000 },
+  mochaOption);
+
+  if (shouldDebugger) mochaOption.timeout = Infinity;
+  mocha || (mocha = new _mocha.default(mochaOption));
 
   if (shouldInvalidateRequireModule) {
-    const { invalidateRequiredModule, invalidateRequiredModuleEventHandler } = '../utility/invalidateRequiredModule.js'
-    invalidateRequiredModuleEventHandler({ mochaInstance: mocha })
-    invalidateRequiredModule({ fileArray: jsFileArray })
+    const { invalidateRequiredModule, invalidateRequiredModuleEventHandler } = '../utility/invalidateRequiredModule.js';
+    invalidateRequiredModuleEventHandler({ mochaInstance: mocha });
+    invalidateRequiredModule({ fileArray: jsFileArray });
   }
 
   if (shouldCompileTest) {
-    let compiler = new Compiler({ babelConfig: targetProject.configuration.configuration.transpilation.babelConfig /** Search for configuration files from target project */ })
-    compiler.requireHook({ restrictToTargetProject: false /* Transpile tests of the target project */ })
-    // process.on('exit', () => {
-    //   console.log('TestRunner CLI')
-    //   console.log(compiler.loadedFiles.map(value => value.filename))
-    //   console.log(compiler.config.ignore)
-    // })
+    let compiler = new _javascriptTranspilation.Compiler({ babelConfig: targetProject.configuration.configuration.transpilation.babelConfig });
+    compiler.requireHook({ restrictToTargetProject: false });
+
+
+
+
+
   }
 
-  // Add each .test.js file to the mocha instance
+
   if (Array.isArray(testTarget)) {
-    // treat test target as array of files.
+
     testTarget.forEach(file => {
-      mocha.addFile(file)
-    })
+      mocha.addFile(file);
+    });
   } else {
-    // single test file path
-    mocha.addFile(testPath)
+
+    mocha.addFile(testPath);
   }
 
-  // Run tests.
+
   try {
     if (shouldDebugger) {
-      subprocessInspector()
-      // debugger // When using runtime inspector API, the breakpoints in VSCode won't be recognized without breaking (Updated - this is no longer true, as VSCode latest release seems to fix this issue).
+      (0, _script.subprocessInspector)();
+
     }
     mocha.run(error => {
-      // exit with non-zero status if there were failures
+
       if (error) {
-        // mocha handles printing error message.
-        // throw error
+
+
       }
-      // process.exit()
-    })
-    // .on('test', function(test) {
-    //     console.log('Test started: '+test.title);
-    // })
-    // .on('test end', function(test) {
-    //     console.log('Test done: '+test.title);
-    // })
-    // .on('pass', function(test) {
-    //     console.log('Test passed');
-    //     console.log(test);
-    // })
-    // .on('fail', function(test, err) {
-    //     console.log('Test fail');
-    //     console.log(test);
-    //     console.log(err);
-    // })
-    // .on('end', function() {
-    //     console.log('All done');
-    // })
+
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   } catch (error) {
-    console.group(`⚠ Error while running Mocha test:`)
-    console.log(error)
-    console.groupEnd()
-    console.log('\n')
-    // throw error
+    console.group(`⚠ Error while running Mocha test:`);
+    console.log(error);
+    console.groupEnd();
+    console.log('\n');
+
   }
 }
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uL3NvdXJjZS9tb2NoYS5qcyJdLCJuYW1lcyI6WyJydW5Nb2NoYSIsIm1vY2hhIiwidGVzdFRhcmdldCIsImpzRmlsZUFycmF5Iiwic2hvdWxkSW52YWxpZGF0ZVJlcXVpcmVNb2R1bGUiLCJzaG91bGRDb21waWxlVGVzdCIsInNob3VsZERlYnVnZ2VyIiwidGFyZ2V0UHJvamVjdCIsIm1vY2hhT3B0aW9uIiwiT2JqZWN0IiwiYXNzaWduIiwidWkiLCJyZXBvcnRlciIsInRpbWVvdXQiLCJJbmZpbml0eSIsIk1vY2hhIiwiaW52YWxpZGF0ZVJlcXVpcmVkTW9kdWxlIiwiaW52YWxpZGF0ZVJlcXVpcmVkTW9kdWxlRXZlbnRIYW5kbGVyIiwibW9jaGFJbnN0YW5jZSIsImZpbGVBcnJheSIsImNvbXBpbGVyIiwiQ29tcGlsZXIiLCJiYWJlbENvbmZpZyIsImNvbmZpZ3VyYXRpb24iLCJ0cmFuc3BpbGF0aW9uIiwicmVxdWlyZUhvb2siLCJyZXN0cmljdFRvVGFyZ2V0UHJvamVjdCIsIkFycmF5IiwiaXNBcnJheSIsImZvckVhY2giLCJmaWxlIiwiYWRkRmlsZSIsInRlc3RQYXRoIiwicnVuIiwiZXJyb3IiLCJjb25zb2xlIiwiZ3JvdXAiLCJsb2ciLCJncm91cEVuZCJdLCJtYXBwaW5ncyI6IjRMQUFBO0FBQ0E7QUFDQTs7QUFFTyxTQUFTQSxRQUFULENBQWtCO0FBQ3ZCQyxFQUFBQSxLQUR1QjtBQUV2QkMsRUFBQUEsVUFGdUI7QUFHdkJDLEVBQUFBLFdBSHVCO0FBSXZCQyxFQUFBQSw2QkFBNkIsR0FBRyxLQUpUO0FBS3ZCQyxFQUFBQSxpQkFBaUIsR0FBRyxJQUxHO0FBTXZCQyxFQUFBQSxjQU51QjtBQU92QkMsRUFBQUEsYUFQdUI7QUFRdkJDLEVBQUFBLFdBQVcsR0FBRyxFQVJTO0FBU3JCLEVBVEcsRUFTQzs7QUFFTkEsRUFBQUEsV0FBVyxHQUFHQyxNQUFNLENBQUNDLE1BQVAsQ0FBYztBQUMxQkMsSUFBQUEsRUFBRSxFQUFFLEtBRHNCO0FBRTFCQyxJQUFBQSxRQUFRLEVBQUUsY0FBYyxLQUZFO0FBRzFCQyxJQUFBQSxPQUFPLEVBQUUsS0FIaUIsRUFBZDtBQUlYTCxFQUFBQSxXQUpXLENBQWQ7O0FBTUEsTUFBSUYsY0FBSixFQUFvQkUsV0FBVyxDQUFDSyxPQUFaLEdBQXNCQyxRQUF0QjtBQUNwQmIsRUFBQUEsS0FBSyxLQUFMQSxLQUFLLEdBQUssSUFBSWMsY0FBSixDQUFVUCxXQUFWLENBQUwsQ0FBTDs7QUFFQSxNQUFJSiw2QkFBSixFQUFtQztBQUNqQyxVQUFNLEVBQUVZLHdCQUFGLEVBQTRCQyxvQ0FBNUIsS0FBcUUsd0NBQTNFO0FBQ0FBLElBQUFBLG9DQUFvQyxDQUFDLEVBQUVDLGFBQWEsRUFBRWpCLEtBQWpCLEVBQUQsQ0FBcEM7QUFDQWUsSUFBQUEsd0JBQXdCLENBQUMsRUFBRUcsU0FBUyxFQUFFaEIsV0FBYixFQUFELENBQXhCO0FBQ0Q7O0FBRUQsTUFBSUUsaUJBQUosRUFBdUI7QUFDckIsUUFBSWUsUUFBUSxHQUFHLElBQUlDLGlDQUFKLENBQWEsRUFBRUMsV0FBVyxFQUFFZixhQUFhLENBQUNnQixhQUFkLENBQTRCQSxhQUE1QixDQUEwQ0MsYUFBMUMsQ0FBd0RGLFdBQXZFLEVBQWIsQ0FBZjtBQUNBRixJQUFBQSxRQUFRLENBQUNLLFdBQVQsQ0FBcUIsRUFBRUMsdUJBQXVCLEVBQUUsS0FBM0IsRUFBckI7Ozs7OztBQU1EOzs7QUFHRCxNQUFJQyxLQUFLLENBQUNDLE9BQU4sQ0FBYzFCLFVBQWQsQ0FBSixFQUErQjs7QUFFN0JBLElBQUFBLFVBQVUsQ0FBQzJCLE9BQVgsQ0FBbUJDLElBQUksSUFBSTtBQUN6QjdCLE1BQUFBLEtBQUssQ0FBQzhCLE9BQU4sQ0FBY0QsSUFBZDtBQUNELEtBRkQ7QUFHRCxHQUxELE1BS087O0FBRUw3QixJQUFBQSxLQUFLLENBQUM4QixPQUFOLENBQWNDLFFBQWQ7QUFDRDs7O0FBR0QsTUFBSTtBQUNGLFFBQUkxQixjQUFKLEVBQW9CO0FBQ2xCOztBQUVEO0FBQ0RMLElBQUFBLEtBQUssQ0FBQ2dDLEdBQU4sQ0FBVUMsS0FBSyxJQUFJOztBQUVqQixVQUFJQSxLQUFKLEVBQVc7OztBQUdWOztBQUVGLEtBUEQ7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7QUEwQkQsR0EvQkQsQ0ErQkUsT0FBT0EsS0FBUCxFQUFjO0FBQ2RDLElBQUFBLE9BQU8sQ0FBQ0MsS0FBUixDQUFlLG1DQUFmO0FBQ0FELElBQUFBLE9BQU8sQ0FBQ0UsR0FBUixDQUFZSCxLQUFaO0FBQ0FDLElBQUFBLE9BQU8sQ0FBQ0csUUFBUjtBQUNBSCxJQUFBQSxPQUFPLENBQUNFLEdBQVIsQ0FBWSxJQUFaOztBQUVEO0FBQ0YiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgTW9jaGEgZnJvbSAnbW9jaGEnIC8vIE1vY2hhIC1Qcm9ncmFtbWF0aWMgcmVzdCBydW5uZXIgaHR0cHM6Ly9naXRodWIuY29tL21vY2hhanMvbW9jaGEvd2lraS9Vc2luZy1tb2NoYS1wcm9ncmFtbWF0aWNhbGx5XG5pbXBvcnQgeyBDb21waWxlciB9IGZyb20gJ0BkZXBsb3ltZW50L2phdmFzY3JpcHRUcmFuc3BpbGF0aW9uJ1xuaW1wb3J0IHsgc3VicHJvY2Vzc0luc3BlY3RvciB9IGZyb20gJy4vc2NyaXB0LmpzJ1xuXG5leHBvcnQgZnVuY3Rpb24gcnVuTW9jaGEoe1xuICBtb2NoYSwgLy8gSW5zdGFudGlhdGUgYSBNb2NoYSBpbnN0YW5jZS5cbiAgdGVzdFRhcmdldCxcbiAganNGaWxlQXJyYXksXG4gIHNob3VsZEludmFsaWRhdGVSZXF1aXJlTW9kdWxlID0gZmFsc2UsIC8vIGludmFsaWRhdGlvbiBpc24ndCBuZWVkZWQgYW55bW9yZSBhcyB0aGlzIG1vZHVsZSBpcyBydW4gaW4gYSBzdWJwcm9jZXNzXG4gIHNob3VsZENvbXBpbGVUZXN0ID0gdHJ1ZSxcbiAgc2hvdWxkRGVidWdnZXIsXG4gIHRhcmdldFByb2plY3QsXG4gIG1vY2hhT3B0aW9uID0ge31cbn0gPSB7fSkge1xuICAvLyBwcm9ncmFtbWF0aWMgYXBpIG9mIG1vY2hhIC0gaHR0cHM6Ly9naXRodWIuY29tL21vY2hhanMvbW9jaGEvd2lraS9Vc2luZy1Nb2NoYS1wcm9ncmFtbWF0aWNhbGx5XG4gIG1vY2hhT3B0aW9uID0gT2JqZWN0LmFzc2lnbih7XG4gICAgdWk6ICd0ZGQnLCAvLyBOb3RlOiBub3QgdXNpbmcgaHR0cHM6Ly9tb2NoYWpzLm9yZy8jcmVxdWlyZSBpbnRlcmZhY2UgYmVjYXVzZSBpdCBkb2Vzbid0IHdvcmsgd2l0aCBub2RlIGNsaSwgaXQgcmVxdWlyZXMgcnVubmluZyB0ZXN0cyB0aHJvdWdoIGBtb2NoYWAgY2xpIGFzIG1lbnRpb25lZCBpbiBodHRwczovL2dpdGh1Yi5jb20vbW9jaGFqcy9tb2NoYS9pc3N1ZXMvMTE2MFxuICAgIHJlcG9ydGVyOiAncHJvZ3Jlc3MnIHx8ICdtaW4nIC8qbWluIHJlbW92ZXMgYW55IGNvbnNvbGUubG9nIG91dHB1dCBvdXRzaWRlIG9mIHRlc3QvaXQgYmxvY2tzKi8sIC8vIGh0dHBzOi8vbW9jaGFqcy5vcmcvI2xpc3RcbiAgICB0aW1lb3V0OiAxMDAwMCAvL21pbGxpc2Vjb25kc1xuICB9LCBtb2NoYU9wdGlvbilcbiAgLy8gcHJldmVudCB0ZXN0IHRpbWVvdXQgZXJyb3IgdHJpZ2dlcmluZyB3aGVuIGluIGRlYnVnIG1vZGUgKGFzIHBhdXNpbmcgc2NyaXB0IGNvdW50cyBpbiB0aGUgdGltZW91dCkuXG4gIGlmIChzaG91bGREZWJ1Z2dlcikgbW9jaGFPcHRpb24udGltZW91dCA9IEluZmluaXR5IC8vIGh0dHBzOi8vZ2l0aHViLmNvbS9tb2NoYWpzL21vY2hhL2Jsb2IvMTg2Y2EzNjU3YjRkM2UwYzBhNjAyYTUwMDY1M2E2OTVmNGUwODkzMC9saWIvcnVubmFibGUuanMjTDM2XG4gIG1vY2hhIHx8PSBuZXcgTW9jaGEobW9jaGFPcHRpb24pXG5cbiAgaWYgKHNob3VsZEludmFsaWRhdGVSZXF1aXJlTW9kdWxlKSB7XG4gICAgY29uc3QgeyBpbnZhbGlkYXRlUmVxdWlyZWRNb2R1bGUsIGludmFsaWRhdGVSZXF1aXJlZE1vZHVsZUV2ZW50SGFuZGxlciB9ID0gJy4uL3V0aWxpdHkvaW52YWxpZGF0ZVJlcXVpcmVkTW9kdWxlLmpzJ1xuICAgIGludmFsaWRhdGVSZXF1aXJlZE1vZHVsZUV2ZW50SGFuZGxlcih7IG1vY2hhSW5zdGFuY2U6IG1vY2hhIH0pXG4gICAgaW52YWxpZGF0ZVJlcXVpcmVkTW9kdWxlKHsgZmlsZUFycmF5OiBqc0ZpbGVBcnJheSB9KVxuICB9XG5cbiAgaWYgKHNob3VsZENvbXBpbGVUZXN0KSB7XG4gICAgbGV0IGNvbXBpbGVyID0gbmV3IENvbXBpbGVyKHsgYmFiZWxDb25maWc6IHRhcmdldFByb2plY3QuY29uZmlndXJhdGlvbi5jb25maWd1cmF0aW9uLnRyYW5zcGlsYXRpb24uYmFiZWxDb25maWcgLyoqIFNlYXJjaCBmb3IgY29uZmlndXJhdGlvbiBmaWxlcyBmcm9tIHRhcmdldCBwcm9qZWN0ICovIH0pXG4gICAgY29tcGlsZXIucmVxdWlyZUhvb2soeyByZXN0cmljdFRvVGFyZ2V0UHJvamVjdDogZmFsc2UgLyogVHJhbnNwaWxlIHRlc3RzIG9mIHRoZSB0YXJnZXQgcHJvamVjdCAqLyB9KVxuICAgIC8vIHByb2Nlc3Mub24oJ2V4aXQnLCAoKSA9PiB7XG4gICAgLy8gICBjb25zb2xlLmxvZygnVGVzdFJ1bm5lciBDTEknKVxuICAgIC8vICAgY29uc29sZS5sb2coY29tcGlsZXIubG9hZGVkRmlsZXMubWFwKHZhbHVlID0+IHZhbHVlLmZpbGVuYW1lKSlcbiAgICAvLyAgIGNvbnNvbGUubG9nKGNvbXBpbGVyLmNvbmZpZy5pZ25vcmUpXG4gICAgLy8gfSlcbiAgfVxuXG4gIC8vIEFkZCBlYWNoIC50ZXN0LmpzIGZpbGUgdG8gdGhlIG1vY2hhIGluc3RhbmNlXG4gIGlmIChBcnJheS5pc0FycmF5KHRlc3RUYXJnZXQpKSB7XG4gICAgLy8gdHJlYXQgdGVzdCB0YXJnZXQgYXMgYXJyYXkgb2YgZmlsZXMuXG4gICAgdGVzdFRhcmdldC5mb3JFYWNoKGZpbGUgPT4ge1xuICAgICAgbW9jaGEuYWRkRmlsZShmaWxlKVxuICAgIH0pXG4gIH0gZWxzZSB7XG4gICAgLy8gc2luZ2xlIHRlc3QgZmlsZSBwYXRoXG4gICAgbW9jaGEuYWRkRmlsZSh0ZXN0UGF0aClcbiAgfVxuXG4gIC8vIFJ1biB0ZXN0cy5cbiAgdHJ5IHtcbiAgICBpZiAoc2hvdWxkRGVidWdnZXIpIHtcbiAgICAgIHN1YnByb2Nlc3NJbnNwZWN0b3IoKVxuICAgICAgLy8gZGVidWdnZXIgLy8gV2hlbiB1c2luZyBydW50aW1lIGluc3BlY3RvciBBUEksIHRoZSBicmVha3BvaW50cyBpbiBWU0NvZGUgd29uJ3QgYmUgcmVjb2duaXplZCB3aXRob3V0IGJyZWFraW5nIChVcGRhdGVkIC0gdGhpcyBpcyBubyBsb25nZXIgdHJ1ZSwgYXMgVlNDb2RlIGxhdGVzdCByZWxlYXNlIHNlZW1zIHRvIGZpeCB0aGlzIGlzc3VlKS5cbiAgICB9XG4gICAgbW9jaGEucnVuKGVycm9yID0+IHtcbiAgICAgIC8vIGV4aXQgd2l0aCBub24temVybyBzdGF0dXMgaWYgdGhlcmUgd2VyZSBmYWlsdXJlc1xuICAgICAgaWYgKGVycm9yKSB7XG4gICAgICAgIC8vIG1vY2hhIGhhbmRsZXMgcHJpbnRpbmcgZXJyb3IgbWVzc2FnZS5cbiAgICAgICAgLy8gdGhyb3cgZXJyb3JcbiAgICAgIH1cbiAgICAgIC8vIHByb2Nlc3MuZXhpdCgpXG4gICAgfSlcbiAgICAvLyAub24oJ3Rlc3QnLCBmdW5jdGlvbih0ZXN0KSB7XG4gICAgLy8gICAgIGNvbnNvbGUubG9nKCdUZXN0IHN0YXJ0ZWQ6ICcrdGVzdC50aXRsZSk7XG4gICAgLy8gfSlcbiAgICAvLyAub24oJ3Rlc3QgZW5kJywgZnVuY3Rpb24odGVzdCkge1xuICAgIC8vICAgICBjb25zb2xlLmxvZygnVGVzdCBkb25lOiAnK3Rlc3QudGl0bGUpO1xuICAgIC8vIH0pXG4gICAgLy8gLm9uKCdwYXNzJywgZnVuY3Rpb24odGVzdCkge1xuICAgIC8vICAgICBjb25zb2xlLmxvZygnVGVzdCBwYXNzZWQnKTtcbiAgICAvLyAgICAgY29uc29sZS5sb2codGVzdCk7XG4gICAgLy8gfSlcbiAgICAvLyAub24oJ2ZhaWwnLCBmdW5jdGlvbih0ZXN0LCBlcnIpIHtcbiAgICAvLyAgICAgY29uc29sZS5sb2coJ1Rlc3QgZmFpbCcpO1xuICAgIC8vICAgICBjb25zb2xlLmxvZyh0ZXN0KTtcbiAgICAvLyAgICAgY29uc29sZS5sb2coZXJyKTtcbiAgICAvLyB9KVxuICAgIC8vIC5vbignZW5kJywgZnVuY3Rpb24oKSB7XG4gICAgLy8gICAgIGNvbnNvbGUubG9nKCdBbGwgZG9uZScpO1xuICAgIC8vIH0pXG4gIH0gY2F0Y2ggKGVycm9yKSB7XG4gICAgY29uc29sZS5ncm91cChg4pqgIEVycm9yIHdoaWxlIHJ1bm5pbmcgTW9jaGEgdGVzdDpgKVxuICAgIGNvbnNvbGUubG9nKGVycm9yKVxuICAgIGNvbnNvbGUuZ3JvdXBFbmQoKVxuICAgIGNvbnNvbGUubG9nKCdcXG4nKVxuICAgIC8vIHRocm93IGVycm9yXG4gIH1cbn1cbiJdfQ==

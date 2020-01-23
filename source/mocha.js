@@ -10,12 +10,14 @@ export function runMocha({
   shouldCompileTest = true,
   shouldDebugger,
   targetProject,
+  mochaOption = {}
 } = {}) {
   // programmatic api of mocha - https://github.com/mochajs/mocha/wiki/Using-Mocha-programmatically
-  let mochaOption = {
+  mochaOption = Object.assign({
     ui: 'tdd', // Note: not using https://mochajs.org/#require interface because it doesn't work with node cli, it requires running tests through `mocha` cli as mentioned in https://github.com/mochajs/mocha/issues/1160
     reporter: 'progress' || 'min' /*min removes any console.log output outside of test/it blocks*/, // https://mochajs.org/#list
-  }
+    timeout: 10000 //milliseconds
+  }, mochaOption)
   // prevent test timeout error triggering when in debug mode (as pausing script counts in the timeout).
   if (shouldDebugger) mochaOption.timeout = Infinity // https://github.com/mochajs/mocha/blob/186ca3657b4d3e0c0a602a500653a695f4e08930/lib/runnable.js#L36
   mocha ||= new Mocha(mochaOption)

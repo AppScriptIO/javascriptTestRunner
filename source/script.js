@@ -12,12 +12,13 @@ export async function runTest({
   testFileArray,
   jsFileArray, // used to clear nodejs module cache on restart
   watchFile = false,
+  mochaOption
 } = {}) {
   // spinning in fork process prevents conflicts between tests and allows terminating the process.
   let manageSubprocess = new ManageSubprocess({
     cliAdapterPath: path.join(__dirname, '../entrypoint/cli/index.js') /*mocha cli for running using nodejs spawn child process interface (accepting only module paths)*/,
   })
-  manageSubprocess.runInSubprocess({ testTarget: testFileArray, jsFileArray, shouldCompileTest, shouldDebugger, targetProject }) // initial trigger action, to run test immediately
+  manageSubprocess.runInSubprocess({ testTarget: testFileArray, jsFileArray, shouldCompileTest, shouldDebugger, targetProject, mochaOption }) // initial trigger action, to run test immediately
 
   if (watchFile)
     await watchFileFunction({

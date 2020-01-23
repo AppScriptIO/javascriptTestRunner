@@ -2,7 +2,7 @@ import path from 'path'
 import assert from 'assert'
 import childProcess from 'child_process'
 import { promises as filesystem } from 'fs'
-import { watchFile as watchFileFunction, ManageSubprocess } from '@dependency/nodejsLiveReload'
+import { watchFile as watchFileFunction, ManageSubprocess } from '@deployment/nodejsLiveReload'
 // await filesystem.lstat(filePath).then(statObject => statObject.isDirectory()) // check if path is a directory
 
 export async function runTest({

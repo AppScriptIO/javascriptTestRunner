@@ -2,6 +2,7 @@ import Mocha from 'mocha' // Mocha -Programmatic rest runner https://github.com/
 import { Compiler } from '@deployment/javascriptTranspilation'
 import { subprocessInspector } from './script.js'
 
+// Mocha programmatic api https://mochajs.org/api/
 export function runMocha({
   mocha, // Instantiate a Mocha instance.
   testTarget,
@@ -18,6 +19,9 @@ export function runMocha({
       ui: 'tdd', // Note: not using https://mochajs.org/#require interface because it doesn't work with node cli, it requires running tests through `mocha` cli as mentioned in https://github.com/mochajs/mocha/issues/1160
       reporter: 'progress' || 'min' /*min removes any console.log output outside of test/it blocks*/, // https://mochajs.org/#list
       timeout: 10000, //milliseconds
+      fullTrace: true,
+      // retries: 3 // number of retries of failed tests
+      // force exit
     },
     mochaOption,
   )

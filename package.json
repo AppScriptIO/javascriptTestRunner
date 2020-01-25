@@ -1,6 +1,6 @@
 {
 	"name": "@deployment/javascriptTestRunner",
-	"version": "2.0.3",
+	"version": "2.0.4",
 	"main": "./entrypoint/programmaticAPI",
 	"description": "Mocha test runner for unit tests and integration tests.",
 	"bin": {
@@ -11,9 +11,9 @@
 		"buildAndRelease": "yarn run scriptManager shouldCompileScript=true @deployment/deploymentScript \".buildAndRelease.moduleProject({})\""
 	},
 	"dependencies": {
+		"@dependency/parseKeyValuePairSeparatedBySymbol": "https://github.com/AppScriptIO/parseKeyValuePairSeparatedBySymbol#semver:^1.x.x",
 		"@deployment/javascriptTranspilation": "https://github.com/AppScriptIO/javascriptTranspilation#semver:^2.x.x",
 		"@deployment/nodejsLiveReload": "https://github.com/AppScriptIO/nodejsLiveReload#semver:^2.x.x",
-		"@dependency/parseKeyValuePairSeparatedBySymbol": "https://github.com/AppScriptIO/parseKeyValuePairSeparatedBySymbol#semver:^1.x.x",
 		"chai": "^4.1.2",
 		"mocha": "*",
 		"moment": "*",

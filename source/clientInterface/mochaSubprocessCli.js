@@ -1,12 +1,13 @@
-/**
- * Interface for running mocha function through childprocess.spawn api (as it allows only a module path to be passed as parameter).
- */
-import { runMocha } from '../mocha.js'
-import assert from 'assert'
-import { consoleLogOverwrite } from '../utility/consoleLogOverwrite.js'
+"use strict";var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
-consoleLogOverwrite()
 
-assert(process.argv[2], '• Must pass command arguments to run Mocha cli script.')
-let args = JSON.parse(process.argv[2])
-runMocha(...args)
+var _mocha = require("../mocha.js");
+var _assert = _interopRequireDefault(require("assert"));
+var _consoleLogOverwrite = require("../utility/consoleLogOverwrite.js");
+
+(0, _consoleLogOverwrite.consoleLogOverwrite)();
+
+(0, _assert.default)(process.argv[2], '• Must pass command arguments to run Mocha cli script.');
+let args = JSON.parse(process.argv[2]);
+(0, _mocha.runMocha)(...args);
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uL3NvdXJjZS9jbGllbnRJbnRlcmZhY2UvbW9jaGFTdWJwcm9jZXNzQ2xpLmpzIl0sIm5hbWVzIjpbInByb2Nlc3MiLCJhcmd2IiwiYXJncyIsIkpTT04iLCJwYXJzZSJdLCJtYXBwaW5ncyI6Ijs7O0FBR0E7QUFDQTtBQUNBOztBQUVBOztBQUVBLHFCQUFPQSxPQUFPLENBQUNDLElBQVIsQ0FBYSxDQUFiLENBQVAsRUFBd0Isd0RBQXhCO0FBQ0EsSUFBSUMsSUFBSSxHQUFHQyxJQUFJLENBQUNDLEtBQUwsQ0FBV0osT0FBTyxDQUFDQyxJQUFSLENBQWEsQ0FBYixDQUFYLENBQVg7QUFDQSxxQkFBUyxHQUFHQyxJQUFaIiwic291cmNlc0NvbnRlbnQiOlsiLyoqXG4gKiBJbnRlcmZhY2UgZm9yIHJ1bm5pbmcgbW9jaGEgZnVuY3Rpb24gdGhyb3VnaCBjaGlsZHByb2Nlc3Muc3Bhd24gYXBpIChhcyBpdCBhbGxvd3Mgb25seSBhIG1vZHVsZSBwYXRoIHRvIGJlIHBhc3NlZCBhcyBwYXJhbWV0ZXIpLlxuICovXG5pbXBvcnQgeyBydW5Nb2NoYSB9IGZyb20gJy4uL21vY2hhLmpzJ1xuaW1wb3J0IGFzc2VydCBmcm9tICdhc3NlcnQnXG5pbXBvcnQgeyBjb25zb2xlTG9nT3ZlcndyaXRlIH0gZnJvbSAnLi4vdXRpbGl0eS9jb25zb2xlTG9nT3ZlcndyaXRlLmpzJ1xuXG5jb25zb2xlTG9nT3ZlcndyaXRlKClcblxuYXNzZXJ0KHByb2Nlc3MuYXJndlsyXSwgJ+KAoiBNdXN0IHBhc3MgY29tbWFuZCBhcmd1bWVudHMgdG8gcnVuIE1vY2hhIGNsaSBzY3JpcHQuJylcbmxldCBhcmdzID0gSlNPTi5wYXJzZShwcm9jZXNzLmFyZ3ZbMl0pXG5ydW5Nb2NoYSguLi5hcmdzKVxuIl19

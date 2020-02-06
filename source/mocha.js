@@ -12,6 +12,7 @@ export function runMocha({
   shouldDebugger,
   targetProject,
   mochaOption = {},
+  additionalParameter
 } = {}) {
   // programmatic api of mocha - https://github.com/mochajs/mocha/wiki/Using-Mocha-programmatically
   mochaOption = Object.assign(
@@ -55,6 +56,11 @@ export function runMocha({
     // single test file path
     mocha.addFile(testPath)
   }
+
+  // stringify additional parameters to be passed to test files, as Mocha.run doesn't support passing parameters to the files.
+  if (additionalParameter)
+    global.additionalParameter = JSON.stringify(additionalParameter)
+  
 
   // Run tests.
   try {

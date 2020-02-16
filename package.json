@@ -1,6 +1,6 @@
 {
 	"name": "@deployment/javascriptTestRunner",
-	"version": "2.1.2",
+	"version": "2.1.3",
 	"main": "./entrypoint/programmaticAPI",
 	"description": "Mocha test runner for unit tests and integration tests.",
 	"bin": {

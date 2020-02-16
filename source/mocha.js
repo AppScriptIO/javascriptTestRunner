@@ -37,7 +37,7 @@ export function runMocha({
   }
 
   if (shouldCompileTest) {
-    let compiler = new Compiler({ babelConfig: targetProject.configuration.configuration.transpilation.babelConfig /** Search for configuration files from target project */ })
+    let compiler = new Compiler({ babelConfig: targetProject.configuration.getTranspilation() /** Search for configuration files from target project */ })
     compiler.requireHook({ restrictToTargetProject: false /* Transpile tests of the target project */ })
     // process.on('exit', () => {
     //   console.log('TestRunner CLI')
